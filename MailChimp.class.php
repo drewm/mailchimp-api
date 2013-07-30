@@ -53,11 +53,11 @@ class MailChimp
 	 */
 	private function _raw_request($method, $args=array())
 	{      
-        $args['apikey'] = $this->api_key;
+		$args['apikey'] = $this->api_key;
 
-        $url = $this->api_endpoint.'/'.$method.'.json';
+		$url = $this->api_endpoint.'/'.$method.'.json';
 
-        $ch = curl_init();
+		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -68,10 +68,10 @@ class MailChimp
 		curl_close($ch);
 
 		if ($result) {
-		    return json_decode($result, true);
+			return json_decode($result, true);
 		}
-		        
-        return false;
+
+		return false;
 	}
 
 }
