@@ -22,9 +22,7 @@ class MailChimp
 	function __construct($api_key)
 	{
 		$this->api_key = $api_key;
-		$parts         = explode('-', $api_key);
-		$datacentre    = array_pop($parts);
-
+		list(, $datacentre) = explode('-', $api_key);
 		$this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
 	}
 
@@ -67,11 +65,7 @@ class MailChimp
 		$result = curl_exec($ch);
 		curl_close($ch);
 
-		if ($result) {
-			return json_decode($result, true);
-		}
-
-		return false;
+		return $result ? json_decode($result, true) : false;
 	}
 
 }
