@@ -21,12 +21,12 @@ Subscribe someone to a list
 	<?php
 	$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
 	$result = $MailChimp->call('lists/subscribe', array(
-					'id'                => $list_id,
+					'id'                => 'b1234346',
 					'email'             => array('email'=>'foo@example.com'),
 					'merge_vars'        => array('FNAME'=>'Bob', 'LNAME'=>'Monkhouse'),
-					'double_optin'      => 'false',
-					'update_existing'   => 'true',
-					'replace_interests' => 'false',
-					'send_welcome'      => 'false',
+					'double_optin'      => false,
+					'update_existing'   => true,
+					'replace_interests' => false,
+					'send_welcome'      => false,
 				));
 	print_r($result);
