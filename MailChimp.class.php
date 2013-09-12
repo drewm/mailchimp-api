@@ -22,7 +22,7 @@ class MailChimp
 	function __construct($api_key)
 	{
 		$this->api_key = $api_key;
-		list(, $datacentre) = explode('-', $api_key);
+		list(, $datacentre) = explode('-', $this->api_key);
 		$this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
 	}
 
