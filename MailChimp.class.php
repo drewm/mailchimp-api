@@ -11,7 +11,7 @@
 class MailChimp
 {
 	private $api_key;
-	private $api_endpoint = 'https://<dc>.api.mailchimp.com/2.0/';
+	private $api_endpoint = '';
 
 
 
@@ -23,7 +23,7 @@ class MailChimp
 	{
 		$this->api_key = $api_key;
 		list(, $datacentre) = explode('-', $this->api_key);
-		$this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
+		$this->api_endpoint = "https://{$datacentre}.api.mailchimp.com/2.0/";
 	}
 
 
