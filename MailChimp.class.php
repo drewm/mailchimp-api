@@ -12,6 +12,7 @@ class MailChimp
 {
 	private $api_key;
 	private $api_endpoint = 'https://<dc>.api.mailchimp.com/2.0/';
+	private $verify_ssl   = false;
 
 
 
@@ -62,6 +63,7 @@ class MailChimp
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
 		$result = curl_exec($ch);
 		curl_close($ch);

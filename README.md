@@ -30,3 +30,6 @@ Subscribe someone to a list
 					'send_welcome'      => false,
 				));
 	print_r($result);
+
+
+*Note for contributors:* This is not Code Golf.
