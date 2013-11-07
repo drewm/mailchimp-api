@@ -66,9 +66,12 @@ class MailChimp
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
 		$result = curl_exec($ch);
+		if (!$result) {
+			$error =  curl_error($ch);
+		}
 		curl_close($ch);
 
-		return $result ? json_decode($result, true) : false;
+		return $result ? json_decode($result, true) : $error;
 	}
 
 }
