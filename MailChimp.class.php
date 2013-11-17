@@ -61,7 +61,7 @@ class MailChimp
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 		curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-MCAPI/2.0');		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
