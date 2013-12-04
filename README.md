@@ -5,7 +5,7 @@ Super-simple, minimum abstraction MailChimp API v2 wrapper, in PHP.
 
 I hate complex wrappers. This lets you get from the MailChimp API docs to the code as directly as possible.
 
-Requires curl and a pulse. Abstraction is for chimps.
+Requires <del>curl</del> and a pulse. Abstraction is for chimps.
 
 Examples
 --------
