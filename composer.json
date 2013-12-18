@@ -1,0 +1,20 @@
+{
+    "name": "drewm/mailchimp-api",
+    "description": "Super-simple, minimum abstraction MailChimp API v2 wrapper",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.2"
+    },
+    "autoload": {
+        "psr-0": { "Drewm": "src/" }
+    },
+    "homepage": "https://github.com/drewm/mailchimp-api",
+    "authors": [ 
+        {
+            "name": "Drew McLellan",
+            "homepage": "http://allinthehead.com/"
+
+        }
+    ]
+
+}
