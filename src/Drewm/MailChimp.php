@@ -5,11 +5,11 @@ namespace Drewm;
 /**
  * Super-simple, minimum abstraction MailChimp API v2 wrapper
  * 
- * Requires curl (I know, right?)
+ * Uses curl if available, falls back to file_get_contents and HTTP stream.
  * This probably has more comments than code.
  * 
- * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 1.0
+ * @author Drew McLellan <drew.mclellan@gmail.com> Michael Minor <me@pixelbacon.com>
+ * @version 1.1
  */
 class MailChimp
 {
@@ -59,17 +59,32 @@ class MailChimp
 
 		$url = $this->api_endpoint.'/'.$method.'.json';
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-		curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-MCAPI/2.0');		
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
-		$result = curl_exec($ch);
-		curl_close($ch);
+		if( function_exists('curl_init') && function_exists('curl_setopt')){
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-MCAPI/2.0');		
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
+			$result = curl_exec($ch);
+			curl_close($ch);
+		} else {
+			$json_data = json_encode($args);
+			$result = file_get_contents($url,null,stream_context_create(array(
+			    'http' => array(
+			        'protocol_version' => 1.1,
+			        'user_agent'       => 'PHP-MCAPI/2.0',
+			        'method'           => 'POST',
+			        'header'           => "Content-type: application/json\r\n".
+			                              "Connection: close\r\n" .
+			                              "Content-length: " . strlen($json_data) . "\r\n",
+			        'content'          => $json_data,
+			    ),
+			)));
+		}
 
 		return $result ? json_decode($result, true) : false;
 	}
