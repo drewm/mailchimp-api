@@ -5,12 +5,12 @@ Super-simple, minimum abstraction MailChimp API v2 wrapper, in PHP.
 
 I hate complex wrappers. This lets you get from the MailChimp API docs to the code as directly as possible.
 
-Requires <del>curl</del> and a pulse. Abstraction is for chimps.
+Requires PHP 5.3+ and a pulse. Abstraction is for chimps.
 
 Installation
 ------------
 
-You can install the mailchimp-api using Composer.  Just add the following to your composer.json:
+You can install the mailchimp-api using Composer. Just add the following to your composer.json:
 
     {
         "require": {
@@ -22,7 +22,7 @@ You will then need to:
 * run ``composer install`` to get these dependencies added to your vendor directory
 * add the autoloader to your application with this line: ``require("vendor/autoload.php")``
 
-We're not on Packagist (yet! Remove this line and the code block below when that happens) so you'll also need to add the repo as a remote by adding a repositories block to the composer.json file:
+We're not on Packagist (yet!) so you'll also need to add the repo as a remote by adding a repositories block to the composer.json file:
 
     "repositories": [
         {

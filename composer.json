@@ -3,7 +3,7 @@
     "description": "Super-simple, minimum abstraction MailChimp API v2 wrapper",
     "license": "MIT",
     "require": {
-        "php": ">=5.2"
+        "php": ">=5.3"
     },
     "autoload": {
         "psr-0": { "Drewm": "src/" }

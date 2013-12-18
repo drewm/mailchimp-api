@@ -7,8 +7,12 @@ namespace Drewm;
  * 
  * Uses curl if available, falls back to file_get_contents and HTTP stream.
  * This probably has more comments than code.
+ *
+ * Contributors:
+ * Michael Minor <me@pixelbacon.com>
+ * Lorna Jane Mitchell, github.com/lornajane
  * 
- * @author Drew McLellan <drew.mclellan@gmail.com> Michael Minor <me@pixelbacon.com>
+ * @author Drew McLellan <drew.mclellan@gmail.com> 
  * @version 1.1
  */
 class MailChimp
@@ -59,7 +63,7 @@ class MailChimp
 
 		$url = $this->api_endpoint.'/'.$method.'.json';
 
-		if( function_exists('curl_init') && function_exists('curl_setopt')){
+		if (function_exists('curl_init') && function_exists('curl_setopt')){
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
@@ -71,9 +75,9 @@ class MailChimp
 			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
 			$result = curl_exec($ch);
 			curl_close($ch);
-		} else {
+		}else{
 			$json_data = json_encode($args);
-			$result = file_get_contents($url,null,stream_context_create(array(
+			$result = file_get_contents($url, null, stream_context_create(array(
 			    'http' => array(
 			        'protocol_version' => 1.1,
 			        'user_agent'       => 'PHP-MCAPI/2.0',
