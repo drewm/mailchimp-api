@@ -28,13 +28,13 @@ Examples
 List lists (lists/list method)
 
 	<?php
-	$MailChimp = new \drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
+	$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
 	print_r($MailChimp->call('lists/list'));
 
 Subscribe someone to a list
 
 	<?php
-	$MailChimp = new \drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
+	$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
 	$result = $MailChimp->call('lists/subscribe', array(
 					'id'                => 'b1234346',
 					'email'             => array('email'=>'davy@example.com'),
