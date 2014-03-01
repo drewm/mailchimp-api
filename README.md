@@ -14,7 +14,7 @@ You can install the mailchimp-api using Composer. Just add the following to your
 
     {
         "require": {
-            "drewm/mailchimp-api": "*"
+            "drewm/mailchimp-api": "dev-master"
         }
     }
 
