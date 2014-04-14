@@ -22,6 +22,8 @@ You will then need to:
 * run ``composer install`` to get these dependencies added to your vendor directory
 * add the autoloader to your application with this line: ``require("vendor/autoload.php")``
 
+Alternatively you can just download the MailChimp.php file and include it manually.
+
 Examples
 --------
 
