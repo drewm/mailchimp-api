@@ -38,7 +38,7 @@ class MailChimp
      * @param  array  $args   An array of arguments to pass to the method. Will be json-encoded for you.
      * @return array          Associative array of json decoded API response.
      */
-    public function call($method, $args=array())
+    public function call($method, $args=array(), $timeout = 10)
     {
         return $this->makeRequest($method, $args);
     }
@@ -49,7 +49,7 @@ class MailChimp
      * @param  array  $args   Assoc array of parameters to be passed
      * @return array          Assoc array of decoded result
      */
-    private function makeRequest($method, $args=array())
+    private function makeRequest($method, $args=array(), $timeout = 10)
     {      
         $args['apikey'] = $this->api_key;
 
@@ -61,7 +61,7 @@ class MailChimp
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
             curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-MCAPI/2.0');       
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
