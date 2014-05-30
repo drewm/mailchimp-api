@@ -40,7 +40,7 @@ class MailChimp
      */
     public function call($method, $args=array(), $timeout = 10)
     {
-        return $this->makeRequest($method, $args);
+        return $this->makeRequest($method, $args, $timeout);
     }
 
     /**
