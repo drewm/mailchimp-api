@@ -13,13 +13,14 @@ namespace Drewm;
  * Lorna Jane Mitchell, github.com/lornajane
  * 
  * @author Drew McLellan <drew.mclellan@gmail.com> 
- * @version 1.1.1
+ * @version 1.2
  */
 class MailChimp
 {
     private $api_key;
     private $api_endpoint = 'https://<dc>.api.mailchimp.com/2.0';
     private $verify_ssl   = false;
+    private $proxy        = false;
 
     /**
      * Create a new instance
@@ -65,6 +66,13 @@ class MailChimp
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
+
+            if ($this->proxy)
+            {
+                curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+                //TODO: add CURLOPT_PROXYUSERPWD
+            }
+
             $result = curl_exec($ch);
             curl_close($ch);
         } else {
@@ -83,5 +91,10 @@ class MailChimp
         }
 
         return $result ? json_decode($result, true) : false;
+    }
+
+    public function setProxy($host, $port, $user = null, $password = null)
+    {
+        $this->proxy = sprintf('%s:%s', $host, $port);
     }
 }

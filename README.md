@@ -27,26 +27,37 @@ Alternatively you can just download the MailChimp.php file and include it manual
 Examples
 --------
 
-List lists (lists/list method)
+###List lists (lists/list method)
 
+```php
 	<?php
-	$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
-	print_r($MailChimp->call('lists/list'));
+		$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
+		print_r($MailChimp->call('lists/list'));
+```
 
-Subscribe someone to a list
+###Subscribe someone to a list
 
+```php
 	<?php
-	$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
-	$result = $MailChimp->call('lists/subscribe', array(
-					'id'                => 'b1234346',
-					'email'             => array('email'=>'davy@example.com'),
-					'merge_vars'        => array('FNAME'=>'Davy', 'LNAME'=>'Jones'),
-					'double_optin'      => false,
-					'update_existing'   => true,
-					'replace_interests' => false,
-					'send_welcome'      => false,
-				));
-	print_r($result);
+		$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
+		$result = $MailChimp->call('lists/subscribe', array(
+			'id'                => 'b1234346',
+			'email'             => array('email'=>'davy@example.com'),
+			'merge_vars'        => array('FNAME'=>'Davy', 'LNAME'=>'Jones'),
+			'double_optin'      => false,
+			'update_existing'   => true,
+			'replace_interests' => false,
+			'send_welcome'      => false,
+		));
+		print_r($result);
+```
 
+###Set Proxy to List Templates (templates/list method)
+```php
+	<?php
+		$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
+		$MailChimp->setProxy($host = '66.96.200.39', $port = '8080'); //use it before call()
+		print_r($MailChimp->call('templates/list'));
+```
 
 *Note for contributors:* This is not Code Golf.
