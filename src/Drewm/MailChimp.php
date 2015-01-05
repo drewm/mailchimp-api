@@ -54,6 +54,7 @@ class MailChimp
         $args['apikey'] = $this->api_key;
 
         $url = $this->api_endpoint.'/'.$method.'.json';
+        $json_data = json_encode($args);
 
         if (function_exists('curl_init') && function_exists('curl_setopt')){
             $ch = curl_init();
@@ -64,11 +65,10 @@ class MailChimp
             curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
             $result = curl_exec($ch);
             curl_close($ch);
         } else {
-            $json_data = json_encode($args);
             $result    = file_get_contents($url, null, stream_context_create(array(
                 'http' => array(
                     'protocol_version' => 1.1,
