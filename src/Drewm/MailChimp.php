@@ -4,15 +4,15 @@ namespace Drewm;
 
 /**
  * Super-simple, minimum abstraction MailChimp API v2 wrapper
- * 
+ *
  * Uses curl if available, falls back to file_get_contents and HTTP stream.
  * This probably has more comments than code.
  *
  * Contributors:
  * Michael Minor <me@pixelbacon.com>
  * Lorna Jane Mitchell, github.com/lornajane
- * 
- * @author Drew McLellan <drew.mclellan@gmail.com> 
+ *
+ * @author Drew McLellan <drew.mclellan@gmail.com>
  * @version 1.1.1
  */
 class MailChimp
@@ -66,6 +66,7 @@ class MailChimp
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
             $result = curl_exec($ch);
             curl_close($ch);
         } else {
