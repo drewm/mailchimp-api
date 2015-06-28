@@ -18,18 +18,20 @@ namespace Drewm;
 class MailChimp
 {
     private $api_key;
-    private $api_endpoint = 'https://<dc>.api.mailchimp.com/2.0';
+    private $api_endpoint = 'https://<dc>.api.mailchimp.com/<version>';
     private $verify_ssl   = false;
 
     /**
      * Create a new instance
      * @param string $api_key Your MailChimp API key
+     * @param string $version Api Version
      */
-    public function __construct($api_key)
+    public function __construct($api_key, $version = '2.0')
     {
         $this->api_key = $api_key;
         list(, $datacentre) = explode('-', $this->api_key);
         $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
+        $this->api_endpoint = str_replace('<version>', $version, $this->api_endpoint);
     }
 
     /**
