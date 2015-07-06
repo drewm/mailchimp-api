@@ -31,6 +31,15 @@ class MailChimp
         list(, $datacentre) = explode('-', $this->api_key);
         $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
     }
+	
+	/**
+     * Validates MailChimp API Key
+     */
+    public function validateApiKey()
+    {
+        $request = $this->call('helper/ping');
+		return !empty($request);
+    }
 
     /**
      * Call an API method. Every request needs the API key, so that is added automatically -- you don't need to pass it in.
