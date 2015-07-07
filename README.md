@@ -10,13 +10,11 @@ Requires PHP 5.3 and a pulse. Abstraction is for chimps.
 Installation
 ------------
 
-You can install the mailchimp-api using Composer. Just add the following to your composer.json:
+You can install the mailchimp-api using Composer:
 
-    {
-        "require": {
-            "drewm/mailchimp-api": "dev-master"
-        }
-    }
+```
+composer require drewm/mailchimp-api
+```
 
 You will then need to:
 * run ``composer install`` to get these dependencies added to your vendor directory
