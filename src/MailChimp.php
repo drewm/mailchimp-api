@@ -1,6 +1,6 @@
 <?php
 
-namespace DrewM;
+namespace DrewM\MailChimp;
 
 /**
  * Super-simple, minimum abstraction MailChimp API v3 wrapper
@@ -28,32 +28,29 @@ class MailChimp
         $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
     }
 	
-	/**
-     * Validates MailChimp API Key
-     */
-    public function validateApiKey()
+    public function delete($method, $args=array(), $timeout=10)
     {
-        $request = $this->call('helper/ping');
-		return !empty($request);
+        return $this->makeRequest('delete', $method, $args, $timeout);
     }
 
-    /**
-     * Call an API method. Every request needs the API key, so that is added automatically -- you don't need to pass it in.
-     * @param  string $$http_verb   The HTTP verb to use: get, post, put, patch, delete
-     * @param  string $method       The API method to call, e.g. 'lists/list'
-     * @param  array  $args         An array of arguments to pass to the method. Will be json-encoded for you.
-     * @return array                Associative array of json decoded API response.
-     */
-    public function call($http_verb, $method, $args = array(), $timeout = 10)
+    public function get($method, $args=array(), $timeout=10)
     {
-        $http_verb = strtolower($http_verb);
-        $verbs     = array('get', 'post', 'put', 'patch', 'delete');
+        return $this->makeRequest('get', $method, $args, $timeout);
+    }
 
-        if (!in_array($http_verb, $verbs)) {
-            throw new \Exception("Invalid HTTP verb. Must be one of ".implode(', ', $verbs));
-        }
+    public function patch($method, $args=array(), $timeout=10)
+    {
+        return $this->makeRequest('patch', $method, $args, $timeout);
+    }
 
-        return $this->makeRequest($http_verb, $method, $args, $timeout);
+    public function post($method, $args=array(), $timeout=10)
+    {
+        return $this->makeRequest('post', $method, $args, $timeout);
+    }
+
+    public function put($method, $args=array(), $timeout=10)
+    {
+        return $this->makeRequest('put', $method, $args, $timeout);
     }
 
     /**
@@ -67,7 +64,8 @@ class MailChimp
     {
         $args['apikey'] = $this->api_key;
 
-        $url = $this->api_endpoint.'/'.$method.'.json';
+        $url = $this->api_endpoint.'/'.$method;
+
         $json_data = json_encode($args);
 
         if (function_exists('curl_init') && function_exists('curl_setopt')) {
