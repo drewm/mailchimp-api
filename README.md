@@ -1,7 +1,7 @@
 MailChimp API
 =============
 
-Super-simple, minimum abstraction MailChimp API v2 wrapper, in PHP.
+Super-simple, minimum abstraction MailChimp API v3 wrapper, in PHP.
 
 I hate complex wrappers. This lets you get from the MailChimp API docs to the code as directly as possible.
 
@@ -28,13 +28,13 @@ Examples
 List lists (lists/list method)
 
 	<?php
-	$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
+	$MailChimp = new \DrewM\MailChimp('abc123abc123abc123abc123abc123-us1');
 	print_r($MailChimp->call('lists/list'));
 
 Subscribe someone to a list
 
 	<?php
-	$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
+	$MailChimp = new \DrewM\MailChimp('abc123abc123abc123abc123abc123-us1');
 	$result = $MailChimp->call('lists/subscribe', array(
 					'id'                => 'b1234346',
 					'email'             => array('email'=>'davy@example.com'),
