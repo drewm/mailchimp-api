@@ -41,7 +41,7 @@ Subscribe someone to a list
 	$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
 	$result = $MailChimp->post('lists/b1234346/members', array(
 					'email_address'     => 'davy@example.com',
-					"status"			=> "subscribed",
+					'status'			=> 'subscribed',
 					'merge_fields'      => array('FNAME'=>'Davy', 'LNAME'=>'Jones'),
 				));
 	print_r($result);
