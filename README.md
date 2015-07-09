@@ -25,13 +25,13 @@ Alternatively you can just download the MailChimp.php file and include it manual
 Examples
 --------
 
-List lists (lists/list method)
+List all the mailing lists (`lists` method)
 
 	<?php
 	use \DrewM\MailChimp\MailChimp;
 
 	$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
-	print_r($MailChimp->get('lists/list'));
+	print_r($MailChimp->get('lists'));
 
 Subscribe someone to a list
 
