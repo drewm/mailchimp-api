@@ -27,21 +27,23 @@ Examples
 
 List all the mailing lists (`lists` method)
 
-	<?php
-	use \DrewM\MailChimp\MailChimp;
+```php
+use \DrewM\MailChimp\MailChimp;
 
-	$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
-	print_r($MailChimp->get('lists'));
+$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
+print_r($MailChimp->get('lists'));
+```
 
 Subscribe someone to a list
 
-	<?php
-	use \DrewM\MailChimp\MailChimp;
+```php
+use \DrewM\MailChimp\MailChimp;
 
-	$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
-	$result = $MailChimp->post('lists/b1234346/members', array(
-					'email_address'     => 'davy@example.com',
-					'status'			=> 'subscribed',
-					'merge_fields'      => array('FNAME'=>'Davy', 'LNAME'=>'Jones'),
-				));
-	print_r($result);
+$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
+$result = $MailChimp->post('lists/b1234346/members', array(
+				'email_address'     => 'davy@example.com',
+				'status'			=> 'subscribed',
+				'merge_fields'      => array('FNAME'=>'Davy', 'LNAME'=>'Jones'),
+			));
+print_r($result);
+```
