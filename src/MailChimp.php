@@ -27,7 +27,7 @@ class MailChimp
         list(, $datacentre) = explode('-', $this->api_key);
         $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
     }
-	
+    
     public function delete($method, $args=array(), $timeout=10)
     {
         return $this->makeRequest('delete', $method, $args, $timeout);
@@ -95,6 +95,11 @@ class MailChimp
 
                 case 'delete':
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                    break;
+
+                case 'patch':
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data); 
                     break;
             }
 
