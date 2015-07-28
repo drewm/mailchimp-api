@@ -3,6 +3,8 @@ MailChimp API
 
 Super-simple, minimum abstraction MailChimp API v2 wrapper, in PHP.
 
+For API v3 version, see the [api-v3 branch](https://github.com/drewm/mailchimp-api/tree/api-v3).
+
 I hate complex wrappers. This lets you get from the MailChimp API docs to the code as directly as possible.
 
 Requires PHP 5.3 and a pulse. Abstraction is for chimps.
