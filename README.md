@@ -34,7 +34,7 @@ $MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
 print_r($MailChimp->get('lists'));
 ```
 
-Subscribe someone to a list
+Subscribe someone to a list and an interest group
 
 ```php
 use \DrewM\MailChimp\MailChimp;
@@ -44,6 +44,7 @@ $result = $MailChimp->post('lists/b1234346/members', array(
 				'email_address'     => 'davy@example.com',
 				'status'			=> 'subscribed',
 				'merge_fields'      => array('FNAME'=>'Davy', 'LNAME'=>'Jones'),
+				'interests' 		=> array( '2s3a384h' => true )
 			));
 print_r($result);
 ```
