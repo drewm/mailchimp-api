@@ -50,3 +50,12 @@ Subscribe someone to a list
 
 
 *Note for contributors:* This is not Code Golf.
+
+
+API Versioning
+--------------
+
+To update the version of the API you are calling, add the `$version` parameter to the constructor.
+
+	<?php
+	$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1', '3.0');
