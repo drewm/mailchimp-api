@@ -1,7 +1,7 @@
 MailChimp API
 =============
 
-Super-simple, minimum abstraction MailChimp API v2 wrapper, in PHP.
+Super-simple, minimum abstraction MailChimp API v3 wrapper, in PHP.
 
 For API v3 version, see the [api-v3 branch](https://github.com/drewm/mailchimp-api/tree/api-v3).
 
@@ -27,26 +27,25 @@ Alternatively you can just download the MailChimp.php file and include it manual
 Examples
 --------
 
-List lists (lists/list method)
+List all the mailing lists (`lists` method)
 
-	<?php
-	$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
-	print_r($MailChimp->call('lists/list'));
+```php
+use \DrewM\MailChimp\MailChimp;
+
+$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
+print_r($MailChimp->get('lists'));
+```
 
 Subscribe someone to a list
 
-	<?php
-	$MailChimp = new \Drewm\MailChimp('abc123abc123abc123abc123abc123-us1');
-	$result = $MailChimp->call('lists/subscribe', array(
-					'id'                => 'b1234346',
-					'email'             => array('email'=>'davy@example.com'),
-					'merge_vars'        => array('FNAME'=>'Davy', 'LNAME'=>'Jones'),
-					'double_optin'      => false,
-					'update_existing'   => true,
-					'replace_interests' => false,
-					'send_welcome'      => false,
-				));
-	print_r($result);
+```php
+use \DrewM\MailChimp\MailChimp;
 
-
-*Note for contributors:* This is not Code Golf.
+$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
+$result = $MailChimp->post('lists/b1234346/members', array(
+				'email_address'     => 'davy@example.com',
+				'status'			=> 'subscribed',
+				'merge_fields'      => array('FNAME'=>'Davy', 'LNAME'=>'Jones'),
+			));
+print_r($result);
+```
