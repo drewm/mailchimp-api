@@ -62,8 +62,6 @@ class MailChimp
      */
     private function makeRequest($http_verb, $method, $args=array(), $timeout=10)
     {
-        $args['apikey'] = $this->api_key;
-
         $url = $this->api_endpoint.'/'.$method;
 
         $json_data = json_encode($args, JSON_FORCE_OBJECT);
@@ -71,10 +69,9 @@ class MailChimp
         if (function_exists('curl_init') && function_exists('curl_setopt')) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); 
-            curl_setopt($ch, CURLOPT_USERPWD, 'drewm:'.$this->api_key); 
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/vnd.api+json',
-                                                        'Content-Type: application/vnd.api+json'));
+                                                        'Content-Type: application/vnd.api+json',
+                                                        'Authorization: apikey '.$this->api_key));
             curl_setopt($ch, CURLOPT_USERAGENT, 'DrewM/MailChimp-API/3.0 (github.com/drewm/mailchimp-api)');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
