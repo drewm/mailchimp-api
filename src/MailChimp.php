@@ -98,6 +98,11 @@ class MailChimp
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data); 
                     break;
+                
+                case 'put':
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data); 
+                    break;
             }
 
 
