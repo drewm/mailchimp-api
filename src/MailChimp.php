@@ -9,23 +9,27 @@ namespace DrewM\MailChimp;
  * This probably has more comments than code.
  *
  * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.0
+ * @version 2.1
  */
 class MailChimp
 {
     private $api_key;
     private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
-    private $verify_ssl   = true;
+    private $verify_ssl;
 
+	private $last_error;
     /**
      * Create a new instance
      * @param string $api_key Your MailChimp API key
      */
-    public function __construct($api_key)
+    public function __construct($api_key, $verify_ssl = true)
     {
         $this->api_key = $api_key;
         list(, $datacentre) = explode('-', $this->api_key);
         $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
+		
+		$this->verify_ssl = $verify_ssl;
+		$this->last_error = '';
     }
     
     public function delete($method, $args=array(), $timeout=10)
@@ -105,8 +109,13 @@ class MailChimp
                     break;
             }
 
-
+			$this->last_error = '';
             $result = curl_exec($ch);
+			
+			if(!$result){
+				$this->last_error = curl_error($ch);
+			}
+			
             curl_close($ch);
         } else {
             throw new \Exception("cURL support is required, but can't be found.");
@@ -114,4 +123,8 @@ class MailChimp
 
         return $result ? json_decode($result, true) : false;
     }
+	
+	public function getLastError(){
+		return $this->last_error;
+	}
 }
