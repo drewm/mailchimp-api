@@ -28,7 +28,6 @@ Alternatively you can just download the MailChimp.php file and include it manual
 include('./Mailchimp.php'); 
 ```
 
-
 Examples
 --------
 
@@ -55,3 +54,8 @@ $result = $MailChimp->post('lists/b1234346/members', array(
 			));
 print_r($result);
 ```
+
+Troubleshooting
+---------------
+
+If your server's CA root certificates are not up to date you may find that SSL verification fails and you don't get a response. The correction solution for this [is not to disable SSL verification](http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/). The solution is to update your certificates. If you can't do that, there's an option at the top of the class file. Please don't just switch it off without at least attempting to update your certs -- that's lazy and dangerous. You're not a lazy, dangerous developer are you?

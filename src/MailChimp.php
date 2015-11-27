@@ -9,13 +9,18 @@ namespace DrewM\MailChimp;
  * This probably has more comments than code.
  *
  * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.0
+ * @version 2.0.5
  */
 class MailChimp
 {
     private $api_key;
     private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
-    public  $verify_ssl   = true;
+    
+    /*  SSL Verification
+        Read before disabling: 
+        http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/
+    */
+    public  $verify_ssl   = true; 
 
     /**
      * Create a new instance
