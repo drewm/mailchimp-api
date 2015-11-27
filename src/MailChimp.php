@@ -77,7 +77,7 @@ class MailChimp
             curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-
+            curl_setopt($ch, CURLOPT_ENCODING, '');
 
             switch($http_verb) {
                 case 'post':
