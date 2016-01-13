@@ -69,7 +69,7 @@ class MailChimp
     {
         $url = $this->api_endpoint.'/'.$method;
 
-        $json_data = json_encode($args, JSON_FORCE_OBJECT);
+        $json_data = json_encode($args);
 
         if (function_exists('curl_init') && function_exists('curl_setopt')) {
             $ch = curl_init();
