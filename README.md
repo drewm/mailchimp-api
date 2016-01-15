@@ -50,19 +50,21 @@ print_r($result);
 Subscribe someone to a list (with a `post` to the `list/{listID}/members` method):
 
 ```php
-$result = $MailChimp->post('lists/b1234346/members', [
-				'email_address'     => 'davy@example.com',
-				'status'			=> 'subscribed',
+$list_id = 'b1234346';
+$result = $MailChimp->post("lists/$list_id/members", [
+				'email_address' => 'davy@example.com',
+				'status'        => 'subscribed',
 			]);
 print_r($result);
 ```
 
-Update a list member with more information (using `put` to update):
+Update a list member with more information (using `patch` to update):
 
 ```php
-$result = $MailChimp->put('lists/b1234346/members/c67894321', [
-				'merge_fields'      => ['FNAME'=>'Davy', 'LNAME'=>'Jones'],
-				'interests' 		=> ['2s3a384h' => true],
+$subscriber_hash = $MailChimp->subscriberHash('davy@example.com');
+$result = $MailChimp->patch("lists/$list_id/members/$subscriber_hash", [
+				'merge_fields' => ['FNAME'=>'Davy', 'LNAME'=>'Jones'],
+				'interests'    => ['2s3a384h' => true],
 			]);
 print_r($result);
 ```
@@ -70,7 +72,8 @@ print_r($result);
 Remove a list member using the `delete` method:
 
 ```php
-$MailChimp->delete('lists/b1234346/members/c67894321');
+$subscriber_hash = $MailChimp->subscriberHash('davy@example.com');
+$MailChimp->delete("lists/$list_id/members/$subscriber_hash");
 ```
 
 Troubleshooting
