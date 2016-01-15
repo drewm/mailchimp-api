@@ -32,6 +32,11 @@ class MailChimp
         list(, $datacentre) = explode('-', $this->api_key);
         $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
     }
+
+    public function subscriberHash($email)
+    {
+        return md5(strtolower($email));
+    }
     
     public function delete($method, $args=array(), $timeout=10)
     {
