@@ -31,28 +31,46 @@ include('./Mailchimp.php');
 Examples
 --------
 
-List all the mailing lists (`lists` method)
+Start by `use`-ing the class and creating an instance with your API key
 
 ```php
 use \DrewM\MailChimp\MailChimp;
 
-$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
-print_r($MailChimp->get('lists'));
+$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1')
 ```
 
-Subscribe someone to a list and an interest group
+Then, list all the mailing lists (with a `get` on the `lists` method)
 
 ```php
-use \DrewM\MailChimp\MailChimp;
+$result = $MailChimp->get('lists');
 
-$MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
-$result = $MailChimp->post('lists/b1234346/members', array(
+print_r($result);
+```
+
+Subscribe someone to a list (with a `post` to the `list/{listID}/members` method):
+
+```php
+$result = $MailChimp->post('lists/b1234346/members', [
 				'email_address'     => 'davy@example.com',
 				'status'			=> 'subscribed',
-				'merge_fields'      => array('FNAME'=>'Davy', 'LNAME'=>'Jones'),
-				'interests' 		=> array( '2s3a384h' => true )
-			));
+			]);
 print_r($result);
+```
+
+Update a list member with more information (using `put` to update):
+
+```php
+$result = $MailChimp->put('lists/b1234346/members/c67894321', [
+				'merge_fields'      => ['FNAME'=>'Davy', 'LNAME'=>'Jones'],
+				'interests' 		=> ['2s3a384h' => true],
+			]);
+print_r($result);
+```
+
+Remove a list member using the `delete` method:
+
+```php
+$MailChimp->delete('lists/b1234346/members/c67894321');
 ```
 
 Troubleshooting
