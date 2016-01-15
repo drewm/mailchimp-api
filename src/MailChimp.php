@@ -88,6 +88,7 @@ class MailChimp
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
             curl_setopt($ch, CURLOPT_ENCODING, '');
+            curl_setopt($ch, CURLOPT_HEADER, false);
 
             switch($http_verb) {
                 case 'post':
@@ -116,12 +117,16 @@ class MailChimp
             }
 
 
-            $result = curl_exec($ch);
+            $content = curl_exec($ch);
+            $headers = curl_getinfo($ch);
+            $result = $content ? json_decode($content, true) : false;
+            $result['http_headers'] = $headers;
+            $result['body'] = $content;
             curl_close($ch);
         } else {
             throw new \Exception("cURL support is required, but can't be found.");
         }
 
-        return $result ? json_decode($result, true) : false;
+        return $result;
     }
 }
