@@ -51,28 +51,35 @@ Subscribe someone to a list (with a `post` to the `list/{listID}/members` method
 
 ```php
 $list_id = 'b1234346';
+
 $result = $MailChimp->post("lists/$list_id/members", [
 				'email_address' => 'davy@example.com',
 				'status'        => 'subscribed',
 			]);
+
 print_r($result);
 ```
 
 Update a list member with more information (using `patch` to update):
 
 ```php
+$list_id = 'b1234346';
 $subscriber_hash = $MailChimp->subscriberHash('davy@example.com');
+
 $result = $MailChimp->patch("lists/$list_id/members/$subscriber_hash", [
 				'merge_fields' => ['FNAME'=>'Davy', 'LNAME'=>'Jones'],
 				'interests'    => ['2s3a384h' => true],
 			]);
+
 print_r($result);
 ```
 
 Remove a list member using the `delete` method:
 
 ```php
+$list_id = 'b1234346';
 $subscriber_hash = $MailChimp->subscriberHash('davy@example.com');
+
 $MailChimp->delete("lists/$list_id/members/$subscriber_hash");
 ```
 
