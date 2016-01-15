@@ -14,13 +14,16 @@ namespace DrewM\MailChimp;
 class MailChimp
 {
     private $api_key;
-    private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
+    private $api_endpoint  = 'https://<dc>.api.mailchimp.com/3.0';
     
     /*  SSL Verification
         Read before disabling: 
         http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/
     */
-    public  $verify_ssl   = true; 
+    public  $verify_ssl    = true; 
+
+    private $last_error    = false;
+    private $last_response = array();
 
     /**
      * Create a new instance
@@ -33,9 +36,33 @@ class MailChimp
         $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
     }
 
+    /**
+     * Convert an email address into a 'subscriber hash' for identifying the subscriber in a method URL
+     * @param   string  $email  The subscriber's email address
+     * @return  string          Hashed version of the input
+     */
     public function subscriberHash($email)
     {
         return md5(strtolower($email));
+    }
+
+    /**
+     * Get the last error returned by either the network transport, or by the API.
+     * If something didn't work, this should contain the string describing the problem.
+     * @return  Message describing the error
+     */
+    public function getLastError()
+    {
+        return $this->last_error;
+    }
+
+    /**
+     * Get an array containing the HTTP headers and the body of the API response.
+     * @return array  Assoc array with keys 'headers' and 'body'
+     */
+    public function getLastResponse()
+    {
+        return $this->last_response;
     }
     
     public function delete($method, $args=array(), $timeout=10)
@@ -65,7 +92,7 @@ class MailChimp
 
     /**
      * Performs the underlying HTTP request. Not very exciting
-     * @param  string $$http_verb   The HTTP verb to use: get, post, put, patch, delete
+     * @param  string $http_verb   The HTTP verb to use: get, post, put, patch, delete
      * @param  string $method       The API method to be called
      * @param  array  $args         Assoc array of parameters to be passed
      * @return array                Assoc array of decoded result
@@ -75,6 +102,9 @@ class MailChimp
         $url = $this->api_endpoint.'/'.$method;
 
         $json_data = json_encode($args);
+
+        $this->last_error = false;
+        $this->last_response = array('headers'=>null, 'body'=>null);
 
         if (function_exists('curl_init') && function_exists('curl_setopt')) {
             $ch = curl_init();
@@ -116,12 +146,29 @@ class MailChimp
             }
 
 
-            $result = curl_exec($ch);
+            $this->last_response['body']    = curl_exec($ch);
+            $this->last_response['headers'] = curl_getinfo($ch);
+            
+            if (!$this->last_response['body']) {
+                $this->last_error = curl_error($ch);
+            }
+            
             curl_close($ch);
         } else {
             throw new \Exception("cURL support is required, but can't be found.");
         }
 
-        return $result ? json_decode($result, true) : false;
+        if ($this->last_response['body']) {
+
+            $d = json_decode($this->last_response['body'], true);
+            
+            if (isset($d['status']) && $d['status']!='200' && isset($d['detail'])) {
+                $this->last_error = sprintf('%d: %s', $d['status'], $d['detail']);
+            }
+            
+            return $d;
+        }
+
+        return false;
     }
 }
