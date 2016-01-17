@@ -4,12 +4,11 @@ namespace DrewM\MailChimp;
 
 /**
  * Super-simple, minimum abstraction MailChimp API v3 wrapper
- *
- * Uses curl if available, falls back to file_get_contents and HTTP stream.
- * This probably has more comments than code.
+ * MailChimp API v3: http://developer.mailchimp.com
+ * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.0.5
+ * @version 2.0.6
  */
 class MailChimp
 {
