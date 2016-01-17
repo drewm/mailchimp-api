@@ -3,7 +3,9 @@ MailChimp API
 
 Super-simple, minimum abstraction MailChimp API v2 wrapper, in PHP.
 
-For API v3 version, see the [api-v3 branch](https://github.com/drewm/mailchimp-api/tree/api-v3).
+**The MailChimp API v2 is deprecated, so this branch is now deprecated too.**
+
+For API v3 version, see the [master branch](https://github.com/drewm/mailchimp-api).
 
 I hate complex wrappers. This lets you get from the MailChimp API docs to the code as directly as possible.
 
