@@ -31,8 +31,11 @@ class MailChimp
     public function __construct($api_key)
     {
         $this->api_key = $api_key;
-        list(, $datacentre) = explode('-', $this->api_key);
-        $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
+
+        list(, $datacentre)  = explode('-', $this->api_key);
+        $this->api_endpoint  = str_replace('<dc>', $datacentre, $this->api_endpoint);
+
+        $this->last_response = array('headers'=>null, 'body'=>null);
     }
 
     /**
@@ -136,10 +139,9 @@ class MailChimp
     {
         $url = $this->api_endpoint.'/'.$method;
 
-        $json_data = json_encode($args);
-
-        $this->last_error = '';
-        $this->last_response = array('headers'=>null, 'body'=>null);
+        $this->last_error    = '';
+        $response            = array('headers'=>null, 'body'=>null);
+        $this->last_response = $response;
 
         if (function_exists('curl_init') && function_exists('curl_setopt')) {
             $ch = curl_init();
@@ -157,7 +159,7 @@ class MailChimp
             switch($http_verb) {
                 case 'post':
                     curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data); 
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
                     break;
 
                 case 'get':
@@ -171,20 +173,19 @@ class MailChimp
 
                 case 'patch':
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data); 
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
                     break;
                 
                 case 'put':
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data); 
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args)); 
                     break;
             }
 
-
-            $this->last_response['body']    = curl_exec($ch);
-            $this->last_response['headers'] = curl_getinfo($ch);
+            $response['body']    = curl_exec($ch);
+            $response['headers'] = curl_getinfo($ch);
             
-            if (!$this->last_response['body']) {
+            if ($response['body'] === false) {
                 $this->last_error = curl_error($ch);
             }
             
@@ -193,9 +194,16 @@ class MailChimp
             throw new \Exception("cURL support is required, but can't be found.");
         }
 
-        if ($this->last_response['body']) {
+        return $this->formatResponse($response);
+    }
 
-            $d = json_decode($this->last_response['body'], true);
+    private function formatResponse($response)
+    {
+        $this->last_response = $response;
+
+        if (!empty($response['body'])) {
+
+            $d = json_decode($response['body'], true);
             
             if (isset($d['status']) && $d['status']!='200' && isset($d['detail'])) {
                 $this->last_error = sprintf('%d: %s', $d['status'], $d['detail']);
