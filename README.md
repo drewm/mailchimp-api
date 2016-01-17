@@ -10,10 +10,10 @@ Requires PHP 5.3 and a pulse. Abstraction is for chimps.
 Installation
 ------------
 
-You can install mailchimp-api v3 dev branch using Composer:
+You can install mailchimp-api using Composer:
 
 ```
-composer require drewm/mailchimp-api:dev-api-v3
+composer require drewm/mailchimp-api
 ```
 
 You will then need to:
