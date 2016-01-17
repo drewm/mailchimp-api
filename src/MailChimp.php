@@ -21,7 +21,7 @@ class MailChimp
     */
     public  $verify_ssl    = true; 
 
-    private $last_error    = false;
+    private $last_error    = '';
     private $last_response = array();
 
     /**
@@ -58,12 +58,11 @@ class MailChimp
 
     /**
      * Get an array containing the HTTP headers and the body of the API response.
-     * @return array|false  Assoc array with keys 'headers' and 'body'
+     * @return array  Assoc array with keys 'headers' and 'body'
      */
     public function getLastResponse()
     {
-        if ($this->last_response) return $this->last_response;
-        return false;
+        return $this->last_response;
     }
     
     /**
