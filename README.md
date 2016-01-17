@@ -7,8 +7,6 @@ I hate complex wrappers. This lets you get from the MailChimp API docs to the co
 
 Requires PHP 5.3 and a pulse. Abstraction is for chimps.
 
-*API v3:* If you are using this v3 branch successfully, please let me know so I can consider making it the master branch.
-
 Installation
 ------------
 
