@@ -87,4 +87,25 @@ $MailChimp->delete("lists/$list_id/members/$subscriber_hash");
 Troubleshooting
 ---------------
 
+To get the last error returned by either the HTTP client or by the API, use `getLastError()`:
+
+```php
+echo $MailChimp->getLastError();
+```
+
+For further debugging, you can inspect the headers and body of the response:
+
+```php
+print_r($MailChimp->getLastResponse());
+```
+
 If your server's CA root certificates are not up to date you may find that SSL verification fails and you don't get a response. The correction solution for this [is not to disable SSL verification](http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/). The solution is to update your certificates. If you can't do that, there's an option at the top of the class file. Please don't just switch it off without at least attempting to update your certs -- that's lazy and dangerous. You're not a lazy, dangerous developer are you?
+
+Contributing
+------------
+
+This is a fairly simple wrapper, but it has been made much better by contributions from those using it. If you'd like to suggest an improvement, please raise an issue to discuss it before making your pull request.
+
+Pull requests for bugs are more than welcome - please explain the bug you're trying to fix in the message.
+
+There are a small number of PHPUnit unit tests. To get up and running, copy `.env.example` to `.env` and add your API key details. Unit testing against an API is obviously a bit tricky, but I'd welcome any contributions to this. It would be great to have more test coverage.
