@@ -8,7 +8,7 @@ namespace DrewM\MailChimp;
  * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.0.6
+ * @version 2.0.7
  */
 class MailChimp
 {
@@ -48,42 +48,79 @@ class MailChimp
     /**
      * Get the last error returned by either the network transport, or by the API.
      * If something didn't work, this should contain the string describing the problem.
-     * @return  Message describing the error
+     * @return  array|false  describing the error
      */
     public function getLastError()
     {
-        return $this->last_error;
+        if ($this->last_error) return $this->last_error;
+        return false;
     }
 
     /**
      * Get an array containing the HTTP headers and the body of the API response.
-     * @return array  Assoc array with keys 'headers' and 'body'
+     * @return array|false  Assoc array with keys 'headers' and 'body'
      */
     public function getLastResponse()
     {
-        return $this->last_response;
+        if ($this->last_response) return $this->last_response;
+        return false;
     }
     
+    /**
+     * Make an HTTP DELETE request - for deleting data
+     * @param   string        URL of the API request method
+     * @param   array         Assoc array of arguments (if any)
+     * @param   int           Timeout limit for request in seconds
+     * @return  array|false   Assoc array of API response, decoded from JSON
+     */
     public function delete($method, $args=array(), $timeout=10)
     {
         return $this->makeRequest('delete', $method, $args, $timeout);
     }
 
+    /**
+     * Make an HTTP GET request - for retrieving data
+     * @param   string        URL of the API request method
+     * @param   array         Assoc array of arguments (usually your data)
+     * @param   int           Timeout limit for request in seconds
+     * @return  array|false   Assoc array of API response, decoded from JSON
+     */
     public function get($method, $args=array(), $timeout=10)
     {
         return $this->makeRequest('get', $method, $args, $timeout);
     }
 
+    /**
+     * Make an HTTP PATCH request - for performing partial updates
+     * @param   string        URL of the API request method
+     * @param   array         Assoc array of arguments (usually your data)
+     * @param   int           Timeout limit for request in seconds
+     * @return  array|false   Assoc array of API response, decoded from JSON
+     */
     public function patch($method, $args=array(), $timeout=10)
     {
         return $this->makeRequest('patch', $method, $args, $timeout);
     }
 
+    /**
+     * Make an HTTP POST request - for creating and updating items
+     * @param   string        URL of the API request method
+     * @param   array         Assoc array of arguments (usually your data)
+     * @param   int           Timeout limit for request in seconds
+     * @return  array|false   Assoc array of API response, decoded from JSON
+     */
     public function post($method, $args=array(), $timeout=10)
     {
         return $this->makeRequest('post', $method, $args, $timeout);
     }
 
+    /**
+     * Make an HTTP PUT request - for creating new items
+     * @param   string        URL of the API request method
+     * @param   array         Assoc array of arguments (usually your data)
+     * @param   int           Timeout limit for request in seconds
+     * @return  array|false   Assoc array of API response, decoded from JSON
+     */
     public function put($method, $args=array(), $timeout=10)
     {
         return $this->makeRequest('put', $method, $args, $timeout);
@@ -94,7 +131,7 @@ class MailChimp
      * @param  string $http_verb   The HTTP verb to use: get, post, put, patch, delete
      * @param  string $method       The API method to be called
      * @param  array  $args         Assoc array of parameters to be passed
-     * @return array                Assoc array of decoded result
+     * @return array|false          Assoc array of decoded result
      */
     private function makeRequest($http_verb, $method, $args=array(), $timeout=10)
     {
@@ -102,7 +139,7 @@ class MailChimp
 
         $json_data = json_encode($args);
 
-        $this->last_error = false;
+        $this->last_error = '';
         $this->last_response = array('headers'=>null, 'body'=>null);
 
         if (function_exists('curl_init') && function_exists('curl_setopt')) {
