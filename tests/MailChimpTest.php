@@ -7,18 +7,26 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$dotenv = new Dotenv\Dotenv(__DIR__.'/../');
-		$dotenv->load();
+		$env_file_path = __DIR__.'/../';
+		
+		if (file_exists($env_file_path.'.env')) {
+			$dotenv = new Dotenv\Dotenv($env_file_path);
+			$dotenv->load();	
+		}
+		
 	}
 
 	public function testTestEnvironment()
 	{
-		$this->assertNotEmpty(getenv('MC_API_KEY'), 'No environment variables! Copy .env.example -> .env and fill out your MailChimp account details.');
+		$MC_API_KEY = getenv('MC_API_KEY');
+		$this->assertNotEmpty($MC_API_KEY, 'No environment variables! Copy .env.example -> .env and fill out your MailChimp account details.');
 	}
 
 	public function testInstantiation()
 	{
-		$MailChimp = new MailChimp(getenv('MC_API_KEY'));
+		$MC_API_KEY = getenv('MC_API_KEY');
+		if (!$MC_API_KEY) $this->markTestSkipped('No API key in ENV');
+		$MailChimp = new MailChimp($MC_API_KEY);
 		$this->assertInstanceOf('\DrewM\MailChimp\MailChimp', $MailChimp);
 	}
 
