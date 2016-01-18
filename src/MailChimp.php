@@ -137,62 +137,62 @@ class MailChimp
      */
     private function makeRequest($http_verb, $method, $args=array(), $timeout=10)
     {
+        if (!function_exists('curl_init') || !function_exists('curl_setopt')) {
+            throw new \Exception("cURL support is required, but can't be found.");
+        }
+
         $url = $this->api_endpoint.'/'.$method;
 
         $this->last_error    = '';
         $response            = array('headers'=>null, 'body'=>null);
         $this->last_response = $response;
 
-        if (function_exists('curl_init') && function_exists('curl_setopt')) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/vnd.api+json',
-                                                        'Content-Type: application/vnd.api+json',
-                                                        'Authorization: apikey '.$this->api_key));
-            curl_setopt($ch, CURLOPT_USERAGENT, 'DrewM/MailChimp-API/3.0 (github.com/drewm/mailchimp-api)');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-            curl_setopt($ch, CURLOPT_ENCODING, '');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/vnd.api+json',
+                                                    'Content-Type: application/vnd.api+json',
+                                                    'Authorization: apikey '.$this->api_key));
+        curl_setopt($ch, CURLOPT_USERAGENT, 'DrewM/MailChimp-API/3.0 (github.com/drewm/mailchimp-api)');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        curl_setopt($ch, CURLOPT_ENCODING, '');
 
-            switch($http_verb) {
-                case 'post':
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    $this->attachRequestPayload($ch, $args);
-                    break;
+        switch($http_verb) {
+            case 'post':
+                curl_setopt($ch, CURLOPT_POST, true);
+                $this->attachRequestPayload($ch, $args);
+                break;
 
-                case 'get':
-                    $query = http_build_query($args);
-                    curl_setopt($ch, CURLOPT_URL, $url.'?'.$query);
-                    break;
+            case 'get':
+                $query = http_build_query($args);
+                curl_setopt($ch, CURLOPT_URL, $url.'?'.$query);
+                break;
 
-                case 'delete':
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-                    break;
+            case 'delete':
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                break;
 
-                case 'patch':
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
-                    $this->attachRequestPayload($ch, $args);
-                    break;
-                
-                case 'put':
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-                    $this->attachRequestPayload($ch, $args);
-                    break;
-            }
-
-            $response['body']    = curl_exec($ch);
-            $response['headers'] = curl_getinfo($ch);
+            case 'patch':
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+                $this->attachRequestPayload($ch, $args);
+                break;
             
-            if ($response['body'] === false) {
-                $this->last_error = curl_error($ch);
-            }
-            
-            curl_close($ch);
-        } else {
-            throw new \Exception("cURL support is required, but can't be found.");
+            case 'put':
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+                $this->attachRequestPayload($ch, $args);
+                break;
         }
+
+        $response['body']    = curl_exec($ch);
+        $response['headers'] = curl_getinfo($ch);
+        
+        if ($response['body'] === false) {
+            $this->last_error = curl_error($ch);
+        }
+        
+        curl_close($ch);
 
         return $this->formatResponse($response);
     }
