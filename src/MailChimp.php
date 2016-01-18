@@ -8,7 +8,7 @@ namespace DrewM\MailChimp;
  * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.0.7
+ * @version 2.0.8
  */
 class MailChimp
 {
@@ -159,7 +159,7 @@ class MailChimp
             switch($http_verb) {
                 case 'post':
                     curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
+                    $this->attachRequestPayload($ch, $args);
                     break;
 
                 case 'get':
@@ -173,12 +173,12 @@ class MailChimp
 
                 case 'patch':
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
+                    $this->attachRequestPayload($ch, $args);
                     break;
                 
                 case 'put':
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args)); 
+                    $this->attachRequestPayload($ch, $args);
                     break;
             }
 
@@ -195,6 +195,16 @@ class MailChimp
         }
 
         return $this->formatResponse($response);
+    }
+
+    /**
+     * Encode the data and attach it to the request
+     * @param   resource    cURL session handle, used by reference
+     * @param   array       Assoc array of data to attach
+     */
+    private function attachRequestPayload(&$ch, $data)
+    {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); 
     }
 
     private function formatResponse($response)
