@@ -8,7 +8,7 @@ namespace DrewM\MailChimp;
  * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.0.9
+ * @version 2.1
  */
 class MailChimp
 {
@@ -37,6 +37,16 @@ class MailChimp
         $this->api_endpoint  = str_replace('<dc>', $datacentre, $this->api_endpoint);
 
         $this->last_response = array('headers'=>null, 'body'=>null);
+    }
+
+    /**
+     * Create a new instance of a Batch request. Optionally with the ID of an existing batch.
+     * @param string $batch_id  Optional ID of an existing batch, if you need to check its status for example.
+     * @return Batch            New Batch object.
+     */
+    public function new_batch($batch_id=null)
+    {
+        return new Batch($this, $batch_id);
     }
 
     /**
@@ -78,12 +88,11 @@ class MailChimp
         return $this->last_request;
     }
     
-    
     /**
      * Make an HTTP DELETE request - for deleting data
-     * @param   string        URL of the API request method
-     * @param   array         Assoc array of arguments (if any)
-     * @param   int           Timeout limit for request in seconds
+     * @param   string  $method  URL of the API request method
+     * @param   array   $args    Assoc array of arguments (if any)
+     * @param   int     $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
     public function delete($method, $args=array(), $timeout=10)
@@ -93,9 +102,9 @@ class MailChimp
 
     /**
      * Make an HTTP GET request - for retrieving data
-     * @param   string        URL of the API request method
-     * @param   array         Assoc array of arguments (usually your data)
-     * @param   int           Timeout limit for request in seconds
+     * @param   string  $method   URL of the API request method
+     * @param   array   $args     Assoc array of arguments (usually your data)
+     * @param   int     $timeout  Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
     public function get($method, $args=array(), $timeout=10)
@@ -105,9 +114,9 @@ class MailChimp
 
     /**
      * Make an HTTP PATCH request - for performing partial updates
-     * @param   string        URL of the API request method
-     * @param   array         Assoc array of arguments (usually your data)
-     * @param   int           Timeout limit for request in seconds
+     * @param   string  $method  URL of the API request method
+     * @param   array   $args    Assoc array of arguments (usually your data)
+     * @param   int     $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
     public function patch($method, $args=array(), $timeout=10)
@@ -117,9 +126,9 @@ class MailChimp
 
     /**
      * Make an HTTP POST request - for creating and updating items
-     * @param   string        URL of the API request method
-     * @param   array         Assoc array of arguments (usually your data)
-     * @param   int           Timeout limit for request in seconds
+     * @param   string  $method  URL of the API request method
+     * @param   array   $args    Assoc array of arguments (usually your data)
+     * @param   int     $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
     public function post($method, $args=array(), $timeout=10)
@@ -129,9 +138,9 @@ class MailChimp
 
     /**
      * Make an HTTP PUT request - for creating new items
-     * @param   string        URL of the API request method
-     * @param   array         Assoc array of arguments (usually your data)
-     * @param   int           Timeout limit for request in seconds
+     * @param   string  $method  URL of the API request method
+     * @param   array   $args    Assoc array of arguments (usually your data)
+     * @param   int     $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
     public function put($method, $args=array(), $timeout=10)
@@ -140,8 +149,8 @@ class MailChimp
     }
 
     /**
-     * Performs the underlying HTTP request. Not very exciting
-     * @param  string $http_verb   The HTTP verb to use: get, post, put, patch, delete
+     * Performs the underlying HTTP request. Not very exciting.
+     * @param  string $http_verb    The HTTP verb to use: get, post, put, patch, delete
      * @param  string $method       The API method to be called
      * @param  array  $args         Assoc array of parameters to be passed
      * @return array|false          Assoc array of decoded result
@@ -221,8 +230,8 @@ class MailChimp
 
     /**
      * Encode the data and attach it to the request
-     * @param   resource    cURL session handle, used by reference
-     * @param   array       Assoc array of data to attach
+     * @param   resource  $ch    cURL session handle, used by reference
+     * @param   array     $data  Assoc array of data to attach
      */
     private function attachRequestPayload(&$ch, $data)
     {
@@ -231,6 +240,11 @@ class MailChimp
         curl_setopt($ch, CURLOPT_POSTFIELDS, $encoded); 
     }
 
+    /**
+     * Decode the response and format any error messages for debugging
+     * @param array $response The response from the curl request
+     * @return array|false     The JSON decoded into an array
+     */
     private function formatResponse($response)
     {
         $this->last_response = $response;
