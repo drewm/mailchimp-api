@@ -8,7 +8,7 @@ namespace DrewM\MailChimp;
  * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.0.8
+ * @version 2.0.9
  */
 class MailChimp
 {
@@ -23,6 +23,7 @@ class MailChimp
 
     private $last_error    = '';
     private $last_response = array();
+    private $last_request  = array();
 
     /**
      * Create a new instance
@@ -67,6 +68,16 @@ class MailChimp
     {
         return $this->last_response;
     }
+
+    /**
+     * Get an array containing the HTTP headers and the body of the API request.
+     * @return array  Assoc array
+     */
+    public function getLastRequest()
+    {
+        return $this->last_request;
+    }
+    
     
     /**
      * Make an HTTP DELETE request - for deleting data
@@ -147,6 +158,14 @@ class MailChimp
         $response            = array('headers'=>null, 'body'=>null);
         $this->last_response = $response;
 
+        $this->last_request  = array(
+                                'method' => $http_verb,
+                                'path'   => $method,
+                                'url'    => $url,
+                                'body'   => '',
+                                'timeout'=> $timeout,
+                                );
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/vnd.api+json',
@@ -158,6 +177,7 @@ class MailChimp
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
         curl_setopt($ch, CURLOPT_ENCODING, '');
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
         switch($http_verb) {
             case 'post':
@@ -187,6 +207,8 @@ class MailChimp
 
         $response['body']    = curl_exec($ch);
         $response['headers'] = curl_getinfo($ch);
+
+        $this->last_request['headers'] = $response['headers']['request_header'];
         
         if ($response['body'] === false) {
             $this->last_error = curl_error($ch);
@@ -204,7 +226,9 @@ class MailChimp
      */
     private function attachRequestPayload(&$ch, $data)
     {
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); 
+        $encoded = json_encode($data);
+        $this->last_request['body'] = $encoded;
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $encoded); 
     }
 
     private function formatResponse($response)
