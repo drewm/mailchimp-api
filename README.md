@@ -26,7 +26,7 @@ You will then need to:
 Alternatively you can just download the `MailChimp.php` file and include it manually:
 
 ```php
-include('./Mailchimp.php'); 
+include('./MailChimp.php'); 
 ```
 
 If you wish to use the batch request interface, you'll also need to download and include the `Batch.php` file:
