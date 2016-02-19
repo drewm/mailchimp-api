@@ -154,6 +154,7 @@ class MailChimp
      * @param  string $method       The API method to be called
      * @param  array  $args         Assoc array of parameters to be passed
      * @return array|false          Assoc array of decoded result
+     * @throws \Exception
      */
     private function makeRequest($http_verb, $method, $args=array(), $timeout=10)
     {
@@ -217,7 +218,9 @@ class MailChimp
         $response['body']    = curl_exec($ch);
         $response['headers'] = curl_getinfo($ch);
 
-        $this->last_request['headers'] = $response['headers']['request_header'];
+        if (isset($response['headers']['request_header'])) {
+            $this->last_request['headers'] = $response['headers']['request_header'];
+        }
         
         if ($response['body'] === false) {
             $this->last_error = curl_error($ch);
