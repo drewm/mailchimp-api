@@ -66,11 +66,7 @@ class MailChimp
      */
     public function getLastError()
     {
-        if ($this->last_error) {
-            return $this->last_error;
-        }
-
-        return false;
+        return $this->last_error ?: false;
     }
 
     /**
