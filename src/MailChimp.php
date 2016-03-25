@@ -13,17 +13,17 @@ namespace DrewM\MailChimp;
 class MailChimp
 {
     private $api_key;
-    private $api_endpoint  = 'https://<dc>.api.mailchimp.com/3.0';
-    
+    private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
+
     /*  SSL Verification
         Read before disabling: 
         http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/
     */
-    public  $verify_ssl    = true; 
+    public $verify_ssl = true;
 
-    private $last_error    = '';
+    private $last_error = '';
     private $last_response = array();
-    private $last_request  = array();
+    private $last_request = array();
 
     /**
      * Create a new instance
@@ -33,25 +33,25 @@ class MailChimp
     {
         $this->api_key = $api_key;
 
-        list(, $datacentre)  = explode('-', $this->api_key);
-        $this->api_endpoint  = str_replace('<dc>', $datacentre, $this->api_endpoint);
+        list(, $datacentre) = explode('-', $this->api_key);
+        $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
 
-        $this->last_response = array('headers'=>null, 'body'=>null);
+        $this->last_response = array('headers' => null, 'body' => null);
     }
 
     /**
      * Create a new instance of a Batch request. Optionally with the ID of an existing batch.
-     * @param string $batch_id  Optional ID of an existing batch, if you need to check its status for example.
+     * @param string $batch_id Optional ID of an existing batch, if you need to check its status for example.
      * @return Batch            New Batch object.
      */
-    public function new_batch($batch_id=null)
+    public function new_batch($batch_id = null)
     {
         return new Batch($this, $batch_id);
     }
 
     /**
      * Convert an email address into a 'subscriber hash' for identifying the subscriber in a method URL
-     * @param   string  $email  The subscriber's email address
+     * @param   string $email The subscriber's email address
      * @return  string          Hashed version of the input
      */
     public function subscriberHash($email)
@@ -66,7 +66,10 @@ class MailChimp
      */
     public function getLastError()
     {
-        if ($this->last_error) return $this->last_error;
+        if ($this->last_error) {
+            return $this->last_error;
+        }
+
         return false;
     }
 
@@ -87,100 +90,102 @@ class MailChimp
     {
         return $this->last_request;
     }
-    
+
     /**
      * Make an HTTP DELETE request - for deleting data
-     * @param   string  $method  URL of the API request method
-     * @param   array   $args    Assoc array of arguments (if any)
-     * @param   int     $timeout Timeout limit for request in seconds
+     * @param   string $method URL of the API request method
+     * @param   array $args Assoc array of arguments (if any)
+     * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function delete($method, $args=array(), $timeout=10)
+    public function delete($method, $args = array(), $timeout = 10)
     {
         return $this->makeRequest('delete', $method, $args, $timeout);
     }
 
     /**
      * Make an HTTP GET request - for retrieving data
-     * @param   string  $method   URL of the API request method
-     * @param   array   $args     Assoc array of arguments (usually your data)
-     * @param   int     $timeout  Timeout limit for request in seconds
+     * @param   string $method URL of the API request method
+     * @param   array $args Assoc array of arguments (usually your data)
+     * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function get($method, $args=array(), $timeout=10)
+    public function get($method, $args = array(), $timeout = 10)
     {
         return $this->makeRequest('get', $method, $args, $timeout);
     }
 
     /**
      * Make an HTTP PATCH request - for performing partial updates
-     * @param   string  $method  URL of the API request method
-     * @param   array   $args    Assoc array of arguments (usually your data)
-     * @param   int     $timeout Timeout limit for request in seconds
+     * @param   string $method URL of the API request method
+     * @param   array $args Assoc array of arguments (usually your data)
+     * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function patch($method, $args=array(), $timeout=10)
+    public function patch($method, $args = array(), $timeout = 10)
     {
         return $this->makeRequest('patch', $method, $args, $timeout);
     }
 
     /**
      * Make an HTTP POST request - for creating and updating items
-     * @param   string  $method  URL of the API request method
-     * @param   array   $args    Assoc array of arguments (usually your data)
-     * @param   int     $timeout Timeout limit for request in seconds
+     * @param   string $method URL of the API request method
+     * @param   array $args Assoc array of arguments (usually your data)
+     * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function post($method, $args=array(), $timeout=10)
+    public function post($method, $args = array(), $timeout = 10)
     {
         return $this->makeRequest('post', $method, $args, $timeout);
     }
 
     /**
      * Make an HTTP PUT request - for creating new items
-     * @param   string  $method  URL of the API request method
-     * @param   array   $args    Assoc array of arguments (usually your data)
-     * @param   int     $timeout Timeout limit for request in seconds
+     * @param   string $method URL of the API request method
+     * @param   array $args Assoc array of arguments (usually your data)
+     * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function put($method, $args=array(), $timeout=10)
+    public function put($method, $args = array(), $timeout = 10)
     {
         return $this->makeRequest('put', $method, $args, $timeout);
     }
 
     /**
      * Performs the underlying HTTP request. Not very exciting.
-     * @param  string $http_verb    The HTTP verb to use: get, post, put, patch, delete
-     * @param  string $method       The API method to be called
-     * @param  array  $args         Assoc array of parameters to be passed
+     * @param  string $http_verb The HTTP verb to use: get, post, put, patch, delete
+     * @param  string $method The API method to be called
+     * @param  array $args Assoc array of parameters to be passed
      * @return array|false          Assoc array of decoded result
      * @throws \Exception
      */
-    private function makeRequest($http_verb, $method, $args=array(), $timeout=10)
+    private function makeRequest($http_verb, $method, $args = array(), $timeout = 10)
     {
         if (!function_exists('curl_init') || !function_exists('curl_setopt')) {
             throw new \Exception("cURL support is required, but can't be found.");
         }
 
-        $url = $this->api_endpoint.'/'.$method;
+        $url = $this->api_endpoint . '/' . $method;
 
-        $this->last_error    = '';
-        $response            = array('headers'=>null, 'body'=>null);
+        $this->last_error = '';
+        $response = array('headers' => null, 'body' => null);
         $this->last_response = $response;
 
-        $this->last_request  = array(
-                                'method' => $http_verb,
-                                'path'   => $method,
-                                'url'    => $url,
-                                'body'   => '',
-                                'timeout'=> $timeout,
-                                );
+        $this->last_request = array(
+            'method' => $http_verb,
+            'path' => $method,
+            'url' => $url,
+            'body' => '',
+            'timeout' => $timeout,
+        );
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/vnd.api+json',
-                                                    'Content-Type: application/vnd.api+json',
-                                                    'Authorization: apikey '.$this->api_key));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Accept: application/vnd.api+json',
+            'Content-Type: application/vnd.api+json',
+            'Authorization: apikey ' . $this->api_key
+        ));
         curl_setopt($ch, CURLOPT_USERAGENT, 'DrewM/MailChimp-API/3.0 (github.com/drewm/mailchimp-api)');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
@@ -189,7 +194,7 @@ class MailChimp
         curl_setopt($ch, CURLOPT_ENCODING, '');
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-        switch($http_verb) {
+        switch ($http_verb) {
             case 'post':
                 curl_setopt($ch, CURLOPT_POST, true);
                 $this->attachRequestPayload($ch, $args);
@@ -197,7 +202,7 @@ class MailChimp
 
             case 'get':
                 $query = http_build_query($args);
-                curl_setopt($ch, CURLOPT_URL, $url.'?'.$query);
+                curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
                 break;
 
             case 'delete':
@@ -208,24 +213,24 @@ class MailChimp
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
                 $this->attachRequestPayload($ch, $args);
                 break;
-            
+
             case 'put':
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
                 $this->attachRequestPayload($ch, $args);
                 break;
         }
 
-        $response['body']    = curl_exec($ch);
+        $response['body'] = curl_exec($ch);
         $response['headers'] = curl_getinfo($ch);
 
         if (isset($response['headers']['request_header'])) {
             $this->last_request['headers'] = $response['headers']['request_header'];
         }
-        
+
         if ($response['body'] === false) {
             $this->last_error = curl_error($ch);
         }
-        
+
         curl_close($ch);
 
         return $this->formatResponse($response);
@@ -233,14 +238,14 @@ class MailChimp
 
     /**
      * Encode the data and attach it to the request
-     * @param   resource  $ch    cURL session handle, used by reference
-     * @param   array     $data  Assoc array of data to attach
+     * @param   resource $ch cURL session handle, used by reference
+     * @param   array $data Assoc array of data to attach
      */
     private function attachRequestPayload(&$ch, $data)
     {
         $encoded = json_encode($data);
         $this->last_request['body'] = $encoded;
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $encoded); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $encoded);
     }
 
     /**
@@ -255,11 +260,11 @@ class MailChimp
         if (!empty($response['body'])) {
 
             $d = json_decode($response['body'], true);
-            
-            if (isset($d['status']) && $d['status']!='200' && isset($d['detail'])) {
+
+            if (isset($d['status']) && $d['status'] != '200' && isset($d['detail'])) {
                 $this->last_error = sprintf('%d: %s', $d['status'], $d['detail']);
             }
-            
+
             return $d;
         }
 
