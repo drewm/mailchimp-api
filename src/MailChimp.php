@@ -2,6 +2,8 @@
 
 namespace DrewM\MailChimp;
 
+use Exception;
+
 /**
  * Super-simple, minimum abstraction MailChimp API v3 wrapper
  * MailChimp API v3: http://developer.mailchimp.com
@@ -28,13 +30,18 @@ class MailChimp
     /**
      * Create a new instance
      * @param string $api_key Your MailChimp API key
+     * @throws Exception
      */
     public function __construct($api_key)
     {
         $this->api_key = $api_key;
 
-        list(, $datacentre) = explode('-', $this->api_key);
-        $this->api_endpoint = str_replace('<dc>', $datacentre, $this->api_endpoint);
+        if (false === strpos($this->api_key, '-')) {
+            throw new Exception('Invalid MailChimp API key supplied.');
+        }
+
+        list(, $data_center) = explode('-', $this->api_key);
+        $this->api_endpoint = str_replace('<dc>', $data_center, $this->api_endpoint);
 
         $this->last_response = array('headers' => null, 'body' => null);
     }
@@ -152,13 +159,14 @@ class MailChimp
      * @param  string $http_verb The HTTP verb to use: get, post, put, patch, delete
      * @param  string $method The API method to be called
      * @param  array $args Assoc array of parameters to be passed
-     * @return array|false          Assoc array of decoded result
-     * @throws \Exception
+     * @param int $timeout
+     * @return array|false Assoc array of decoded result
+     * @throws Exception
      */
     private function makeRequest($http_verb, $method, $args = array(), $timeout = 10)
     {
         if (!function_exists('curl_init') || !function_exists('curl_setopt')) {
-            throw new \Exception("cURL support is required, but can't be found.");
+            throw new Exception("cURL support is required, but can't be found.");
         }
 
         $url = $this->api_endpoint . '/' . $method;
