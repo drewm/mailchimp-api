@@ -9,6 +9,7 @@ Requires PHP 5.3 and a pulse. Abstraction is for chimps.
 
 [![Build Status](https://travis-ci.org/drewm/mailchimp-api.svg?branch=master)](https://travis-ci.org/drewm/mailchimp-api)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/drewm/mailchimp-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/drewm/mailchimp-api/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/drewm/mailchimp-api/v/stable)](https://packagist.org/packages/drewm/mailchimp-api) [![Total Downloads](https://poser.pugx.org/drewm/mailchimp-api/downloads)](https://packagist.org/packages/drewm/mailchimp-api) [![Latest Unstable Version](https://poser.pugx.org/drewm/mailchimp-api/v/unstable)](https://packagist.org/packages/drewm/mailchimp-api) [![License](https://poser.pugx.org/drewm/mailchimp-api/license)](https://packagist.org/packages/drewm/mailchimp-api)
 
 Installation
 ------------
