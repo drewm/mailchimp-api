@@ -16,6 +16,12 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
 
     }
 
+    public function testInvalidAPIKey()
+    {
+        $this->setExpectedException('\Exception');
+        $MailChimp = new MailChimp('abc');
+    }
+
     public function testTestEnvironment()
     {
         $MC_API_KEY = getenv('MC_API_KEY');
