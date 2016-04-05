@@ -2,8 +2,6 @@
 
 namespace DrewM\MailChimp;
 
-use Exception;
-
 /**
  * Super-simple, minimum abstraction MailChimp API v3 wrapper
  * MailChimp API v3: http://developer.mailchimp.com
@@ -30,14 +28,14 @@ class MailChimp
     /**
      * Create a new instance
      * @param string $api_key Your MailChimp API key
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct($api_key)
     {
         $this->api_key = $api_key;
 
-        if (false === strpos($this->api_key, '-')) {
-            throw new Exception('Invalid MailChimp API key supplied.');
+        if (strpos($this->api_key, '-') === false) {
+            throw new \Exception('Invalid MailChimp API key supplied.');
         }
 
         list(, $data_center) = explode('-', $this->api_key);
