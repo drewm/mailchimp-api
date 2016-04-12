@@ -58,4 +58,19 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testResponseState()
+    {
+        $MC_API_KEY = getenv('MC_API_KEY');
+
+        if (!$MC_API_KEY) {
+            $this->markTestSkipped('No API key in ENV');
+        }
+
+        $MailChimp = new MailChimp($MC_API_KEY);
+
+        $MailChimp->get('lists');
+
+        $this->assertTrue($MailChimp->success());
+    }
+
 }

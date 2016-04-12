@@ -8,7 +8,7 @@ namespace DrewM\MailChimp;
  * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.1.1
+ * @version 2.1.3
  */
 class MailChimp
 {
@@ -21,9 +21,10 @@ class MailChimp
     */
     public $verify_ssl = true;
 
-    private $last_error = '';
-    private $last_response = array();
-    private $last_request = array();
+    private $request_successful = false;
+    private $last_error         = '';
+    private $last_response      = array();
+    private $last_request       = array();
 
     /**
      * Create a new instance
@@ -39,7 +40,7 @@ class MailChimp
         }
 
         list(, $data_center) = explode('-', $this->api_key);
-        $this->api_endpoint = str_replace('<dc>', $data_center, $this->api_endpoint);
+        $this->api_endpoint  = str_replace('<dc>', $data_center, $this->api_endpoint);
 
         $this->last_response = array('headers' => null, 'body' => null);
     }
@@ -62,6 +63,15 @@ class MailChimp
     public function subscriberHash($email)
     {
         return md5(strtolower($email));
+    }
+
+    /**
+     * Was the last request successful?
+     * @return bool  True for success, false for failure
+     */
+    public function success()
+    {
+        return $this->request_successful;
     }
 
     /**
@@ -169,15 +179,16 @@ class MailChimp
 
         $url = $this->api_endpoint . '/' . $method;
 
-        $this->last_error = '';
-        $response = array('headers' => null, 'body' => null);
-        $this->last_response = $response;
+        $this->last_error         = '';
+        $this->request_successful = false;
+        $response                 = array('headers' => null, 'body' => null);
+        $this->last_response      = $response;
 
         $this->last_request = array(
-            'method' => $http_verb,
-            'path' => $method,
-            'url' => $url,
-            'body' => '',
+            'method'  => $http_verb,
+            'path'    => $method,
+            'url'     => $url,
+            'body'    => '',
             'timeout' => $timeout,
         );
 
@@ -222,7 +233,7 @@ class MailChimp
                 break;
         }
 
-        $response['body'] = curl_exec($ch);
+        $response['body']    = curl_exec($ch);
         $response['headers'] = curl_getinfo($ch);
 
         if (isset($response['headers']['request_header'])) {
@@ -265,6 +276,8 @@ class MailChimp
 
             if (isset($d['status']) && $d['status'] != '200' && isset($d['detail'])) {
                 $this->last_error = sprintf('%d: %s', $d['status'], $d['detail']);
+            } else {
+                $this->request_successful = true;
             }
 
             return $d;
