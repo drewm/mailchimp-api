@@ -3,7 +3,8 @@
     "description": "Super-simple, minimum abstraction MailChimp API v3 wrapper",
     "license": "MIT",
     "require": {
-        "php": ">=5.3"
+        "php": ">=5.3",
+        "ext-curl": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.0.*",
