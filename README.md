@@ -29,11 +29,14 @@ Alternatively you can just download the `MailChimp.php` file and include it manu
 include('./MailChimp.php'); 
 ```
 
-If you wish to use the batch request interface, you'll also need to download and include the `Batch.php` file:
+If you wish to use the batch request or webhook interfaces, you'll also need to download and include the `Batch.php` or `Webhook.php` files:
 
 ```php
 include('./Batch.php'); 
+include('./Webhook.php'); 
 ```
+
+These are optional. If you're not using batches or webhooks you can just skip them. You can always come back and add them later.
 
 Examples
 --------
@@ -90,6 +93,23 @@ $subscriber_hash = $MailChimp->subscriberHash('davy@example.com');
 $MailChimp->delete("lists/$list_id/members/$subscriber_hash");
 ```
 
+Quickly test for a successful action with the `success()` method:
+
+```php
+$list_id = 'b1234346';
+
+$result = $MailChimp->post("lists/$list_id/members", [
+				'email_address' => 'davy@example.com',
+				'status'        => 'subscribed',
+			]);
+
+if ($MailChimp->success()) {
+	print_r($result);	
+} else {
+	echo $MailChimp->getLastError();
+}
+```
+
 Batch Operations
 ----------------
 
@@ -136,6 +156,36 @@ $result = $Batch->check_status();
 ```
 
 When your batch is finished, you can download the results from the URL given in the response. In the JSON, the result of each operation will be keyed by the ID you used as the first argument for the request.
+
+Webhooks
+--------
+
+MailChimp [webhooks](http://kb.mailchimp.com/integrations/other-integrations/how-to-set-up-webhooks) enable your code to be notified of changes to lists and campaigns.
+
+When you set up a webhook you specify a URL on your server for the data to be sent to. This wrapper's Webhook class helps you catch that incoming webhook in a tidy way. It uses a subscription model, with your code subscribing to whichever webhook events it wants to listen for. You provide a callback function that the webhook data is passed to.
+
+To listen for the `unsubscribe` webhook:
+
+```php
+use \DrewM\MailChimp\Webhook;
+
+Webhook::subscribe('unsubscribe', function($data){
+	print_r($data);
+});
+```
+
+At first glance the _subscribe/unsubscribe_ looks confusing - your code is subscribing to the MailChimp `unsubscribe` webhook event. The callback function is passed as single argument - an associative array containing the webhook data.
+
+If you'd rather just catch all webhooks and deal with them yourself, you can use:
+
+```php
+use \DrewM\MailChimp\Webhook;
+
+$result = Webhook::receive();
+print_r($result);
+```
+
+There doesn't appear to be any documentation for the content of the webhook data. It's helpful to use something like [ngrok](https://ngrok.com) for tunneling the webhooks to your development machine - you can then use its web interface to inspect what's been sent and to replay incoming webhooks while you debug your code.
 
 Troubleshooting
 ---------------
