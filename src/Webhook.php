@@ -42,7 +42,7 @@ class Webhook
 			}
 		}
 
-		if ($input) {
+		if (!is_null($input) && $input != '') {
 			return self::processWebhook($input);
 		}	
 		
@@ -55,16 +55,14 @@ class Webhook
 	 * @return array|false 	An associative array containing the details of the received webhook
 	 */
 	private static function processWebhook($input) 
-	{
-		if ($input) {
-			self::$receivedWebhook = $input;
-			parse_str($input, $result);
-			if ($result && isset($result['type'])) {
-				self::dispatchWebhookEvent($result['type'], $result['data']);
-				return $result;
-			}
+	{	
+		self::$receivedWebhook = $input;
+		parse_str($input, $result);
+		if ($result && isset($result['type'])) {
+			self::dispatchWebhookEvent($result['type'], $result['data']);
+			return $result;
 		}
-
+	
 		return false;
 	}
 
