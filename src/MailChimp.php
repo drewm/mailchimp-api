@@ -169,12 +169,12 @@ class MailChimp
      * @param  array $args Assoc array of parameters to be passed
      * @param int $timeout
      * @return array|false Assoc array of decoded result
-     * @throws Exception
+     * @throws \Exception
      */
     private function makeRequest($http_verb, $method, $args = array(), $timeout = 10)
     {
         if (!function_exists('curl_init') || !function_exists('curl_setopt')) {
-            throw new Exception("cURL support is required, but can't be found.");
+            throw new \Exception("cURL support is required, but can't be found.");
         }
 
         $url = $this->api_endpoint . '/' . $method;
