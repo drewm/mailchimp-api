@@ -8,7 +8,7 @@ namespace DrewM\MailChimp;
  * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.1.3
+ * @version 2.2
  */
 class MailChimp
 {
