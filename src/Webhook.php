@@ -11,7 +11,7 @@ namespace DrewM\MailChimp;
 class Webhook
 {
 	private static $eventSubscriptions = array();
-	private static $receivedWebhook = false;
+	private static $receivedWebhook    = null;
 
 	/**
 	 * Subscribe to an incoming webhook request. The callback will be invoked when a matching webhook is received.
@@ -35,7 +35,7 @@ class Webhook
 	public static function receive($input = null)
 	{
 		if (is_null($input)) {
-			if (self::$receivedWebhook !== false) {
+			if (self::$receivedWebhook !== null) {
 				$input = self::$receivedWebhook;
 			} else {
 				$input = file_get_contents("php://input");
