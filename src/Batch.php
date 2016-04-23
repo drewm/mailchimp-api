@@ -29,7 +29,7 @@ class Batch
      */
     public function delete($id, $method)
     {
-        $this->queue_operation('DELETE', $id, $method);
+        $this->queueOperation('DELETE', $id, $method);
     }
 
     /**
@@ -41,7 +41,7 @@ class Batch
      */
     public function get($id, $method, $args = array())
     {
-        $this->queue_operation('GET', $id, $method, $args);
+        $this->queueOperation('GET', $id, $method, $args);
     }
 
     /**
@@ -53,7 +53,7 @@ class Batch
      */
     public function patch($id, $method, $args = array())
     {
-        $this->queue_operation('PATCH', $id, $method, $args);
+        $this->queueOperation('PATCH', $id, $method, $args);
     }
 
     /**
@@ -65,7 +65,7 @@ class Batch
      */
     public function post($id, $method, $args = array())
     {
-        $this->queue_operation('POST', $id, $method, $args);
+        $this->queueOperation('POST', $id, $method, $args);
     }
 
     /**
@@ -77,7 +77,7 @@ class Batch
      */
     public function put($id, $method, $args = array())
     {
-        $this->queue_operation('PUT', $id, $method, $args);
+        $this->queueOperation('PUT', $id, $method, $args);
     }
 
     /**
@@ -121,7 +121,7 @@ class Batch
      * @param   array $args Assoc array of arguments (usually your data)
      * @return  void
      */
-    private function queue_operation($http_verb, $id, $method, $args = null)
+    private function queueOperation($http_verb, $id, $method, $args = null)
     {
         $operation = array(
             'operation_id' => $id,
