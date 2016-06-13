@@ -282,6 +282,7 @@ class MailChimp
 
             return $d;
         } else if (!empty($response['headers']) && isset($response['headers']['http_code']) && ($response['headers']['http_code'] == 204)) {
+            $this->request_successful = true;
             return true;
         }
 
