@@ -16,7 +16,7 @@ class MailChimp
     private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
 
     /*  SSL Verification
-        Read before disabling: 
+        Read before disabling:
         http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/
     */
     public $verify_ssl = true;
@@ -281,6 +281,8 @@ class MailChimp
             }
 
             return $d;
+        } else if (!empty($response['headers']) && isset($response['headers']['http_code']) && ($response['headers']['http_code'] == 204)) {
+            return true;
         }
 
         return false;
