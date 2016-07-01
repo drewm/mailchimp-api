@@ -268,7 +268,7 @@ class MailChimp
     /**
      * Decode the response and format any error messages for debugging
      * @param array $response The response from the curl request
-     * @return array|false     The JSON decoded into an array
+     * @return array|bool     The JSON decoded into an array
      */
     private function formatResponse($response)
     {
@@ -283,6 +283,9 @@ class MailChimp
 
     /**
      * Check if the response was successful or a failure. If it failed, store the error.
+     * @param array $response The response from the curl request
+     * @param array $formattedResponse The response body payload from the curl request
+     * @return bool     If the request was successful
      */
     private function determineSuccess($response, $formattedResponse)
     {
@@ -304,6 +307,9 @@ class MailChimp
 
     /**
      * Find the HTTP status code from the headers or API response body
+     * @param array $response The response from the curl request
+     * @param array $formattedResponse The response body payload from the curl request
+     * @return int  HTTP status code
      */
     private function findHTTPStatus($response, $formattedResponse)
     {
