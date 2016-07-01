@@ -246,7 +246,11 @@ class MailChimp
 
         curl_close($ch);
 
-        return $this->formatResponse($response);
+        $formattedResponse = $this->formatResponse($response);
+
+        $this->determineSuccess($response, $formattedResponse);
+
+        return $formattedResponse;
     }
 
     /**
@@ -271,21 +275,46 @@ class MailChimp
         $this->last_response = $response;
 
         if (!empty($response['body'])) {
+            return json_decode($response['body'], true);
+        }
 
-            $d = json_decode($response['body'], true);
+        return false;
+    }
 
-            if (isset($d['status']) && $d['status'] != '200' && isset($d['detail'])) {
-                $this->last_error = sprintf('%d: %s', $d['status'], $d['detail']);
-            } else {
-                $this->request_successful = true;
-            }
+    /**
+     * Check if the response was successful or a failure. If it failed, store the error.
+     */
+    private function determineSuccess($response, $formattedResponse)
+    {
+        $status = $this->findHTTPStatus($response, $formattedResponse);
 
-            return $d;
-        } else if (!empty($response['headers']) && isset($response['headers']['http_code']) && ($response['headers']['http_code'] == 204)) {
+        if ($status >= 200 && $status <= 299) {
             $this->request_successful = true;
             return true;
         }
 
+        if (isset($formattedResponse['detail'])) {
+            $this->last_error = sprintf('%d: %s', $formattedResponse['status'], $formattedResponse['detail']);
+            return false;
+        }
+
+        $this->last_error = 'Unknown error, call getLastResponse() to find out what happened.';
         return false;
+    }
+
+    /**
+     * Find the HTTP status code from the headers or API response body
+     */
+    private function findHTTPStatus($response, $formattedResponse)
+    {
+        if (!empty($response['body']) && isset($formattedResponse['status'])) {
+            return (int) $formattedResponse['status'];
+        }
+
+        if (!empty($response['headers']) && isset($response['headers']['http_code'])) {
+            return (int) $response['headers']['http_code'];
+        }
+
+        return 418;
     }
 }
