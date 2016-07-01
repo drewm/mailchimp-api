@@ -268,7 +268,7 @@ class MailChimp
     /**
      * Decode the response and format any error messages for debugging
      * @param array $response The response from the curl request
-     * @return array|bool     The JSON decoded into an array
+     * @return array    The JSON decoded into an array
      */
     private function formatResponse($response)
     {
@@ -278,7 +278,7 @@ class MailChimp
             return json_decode($response['body'], true);
         }
 
-        return false;
+        return array();
     }
 
     /**
