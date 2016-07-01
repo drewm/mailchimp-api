@@ -313,12 +313,12 @@ class MailChimp
      */
     private function findHTTPStatus($response, $formattedResponse)
     {
-        if (!empty($response['body']) && isset($formattedResponse['status'])) {
-            return (int) $formattedResponse['status'];
-        }
-
         if (!empty($response['headers']) && isset($response['headers']['http_code'])) {
             return (int) $response['headers']['http_code'];
+        }
+
+        if (!empty($response['body']) && isset($formattedResponse['status'])) {
+            return (int) $formattedResponse['status'];
         }
 
         return 418;
