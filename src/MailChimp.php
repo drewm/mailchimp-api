@@ -214,7 +214,7 @@ class MailChimp
                 break;
 
             case 'get':
-                $query = http_build_query($args);
+                $query = http_build_query($args, '', '&');
                 curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
                 break;
 
