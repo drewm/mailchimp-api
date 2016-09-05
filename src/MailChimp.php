@@ -36,7 +36,7 @@ class MailChimp
         $this->api_key = $api_key;
 
         if (strpos($this->api_key, '-') === false) {
-            throw new \Exception('Invalid MailChimp API key supplied.');
+            throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
         }
 
         list(, $data_center) = explode('-', $this->api_key);
