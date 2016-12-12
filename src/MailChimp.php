@@ -252,6 +252,14 @@ class MailChimp
 
         return $formattedResponse;
     }
+    
+    /**
+     * @return string The url to the API endpoint
+     */
+    public function getApiEndpoint()
+    {
+        return $this->api_endpoint;
+    }
 
     /**
      * Encode the data and attach it to the request
