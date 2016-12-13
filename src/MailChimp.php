@@ -265,7 +265,7 @@ class MailChimp
 
         $formattedResponse = $this->formatResponse($response);
 
-        $this->determineSuccess($response, $formattedResponse);
+        $this->determineSuccess($response, $formattedResponse, $timeout);
 
         return $formattedResponse;
     }
@@ -373,9 +373,10 @@ class MailChimp
      * Check if the response was successful or a failure. If it failed, store the error.
      * @param array $response The response from the curl request
      * @param array|false $formattedResponse The response body payload from the curl request
+     * @param int $timeout The timeout supplied to the curl request.
      * @return bool     If the request was successful
      */
-    private function determineSuccess($response, $formattedResponse)
+    private function determineSuccess($response, $formattedResponse, $timeout)
     {
         $status = $this->findHTTPStatus($response, $formattedResponse);
 
@@ -386,6 +387,11 @@ class MailChimp
 
         if (isset($formattedResponse['detail'])) {
             $this->last_error = sprintf('%d: %s', $formattedResponse['status'], $formattedResponse['detail']);
+            return false;
+        }
+
+        if( $response['headers'] && $response['headers']['total_time'] >= $timeout ) {
+            $this->last_error = sprintf('Request timed out after %f seconds.', $response['headers']['total_time'] );
             return false;
         }
 
