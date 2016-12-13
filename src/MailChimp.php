@@ -15,6 +15,8 @@ class MailChimp
     private $api_key;
     private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
 
+    const TIMEOUT = 10;
+
     /*  SSL Verification
         Read before disabling:
         http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/
@@ -113,7 +115,7 @@ class MailChimp
      * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function delete($method, $args = array(), $timeout = 10)
+    public function delete($method, $args = array(), $timeout = self::TIMEOUT)
     {
         return $this->makeRequest('delete', $method, $args, $timeout);
     }
@@ -125,7 +127,7 @@ class MailChimp
      * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function get($method, $args = array(), $timeout = 10)
+    public function get($method, $args = array(), $timeout = self::TIMEOUT)
     {
         return $this->makeRequest('get', $method, $args, $timeout);
     }
@@ -137,7 +139,7 @@ class MailChimp
      * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function patch($method, $args = array(), $timeout = 10)
+    public function patch($method, $args = array(), $timeout = self::TIMEOUT)
     {
         return $this->makeRequest('patch', $method, $args, $timeout);
     }
@@ -149,7 +151,7 @@ class MailChimp
      * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function post($method, $args = array(), $timeout = 10)
+    public function post($method, $args = array(), $timeout = self::TIMEOUT)
     {
         return $this->makeRequest('post', $method, $args, $timeout);
     }
@@ -161,7 +163,7 @@ class MailChimp
      * @param   int $timeout Timeout limit for request in seconds
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function put($method, $args = array(), $timeout = 10)
+    public function put($method, $args = array(), $timeout = self::TIMEOUT)
     {
         return $this->makeRequest('put', $method, $args, $timeout);
     }
@@ -175,7 +177,7 @@ class MailChimp
      * @return array|false Assoc array of decoded result
      * @throws \Exception
      */
-    private function makeRequest($http_verb, $method, $args = array(), $timeout = 10)
+    private function makeRequest($http_verb, $method, $args = array(), $timeout = self::TIMEOUT)
     {
         if (!function_exists('curl_init') || !function_exists('curl_setopt')) {
             throw new \Exception("cURL support is required, but can't be found.");
