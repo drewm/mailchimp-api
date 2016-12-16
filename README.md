@@ -58,7 +58,7 @@ $result = $MailChimp->get('lists');
 print_r($result);
 ```
 
-Subscribe someone to a list (with a `post` to the `list/{listID}/members` method):
+Subscribe someone to a list (with a `post` to the `lists/{listID}/members` method):
 
 ```php
 $list_id = 'b1234346';
