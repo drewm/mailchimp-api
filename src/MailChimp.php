@@ -306,6 +306,11 @@ class MailChimp
     /**
      * Extract all rel => URL pairs from the provided Link header value
      * 
+     * Mailchimp only implements the URI reference and relation type from
+     * RFC 5988, so the value of the header is something like this:
+     * 
+     * 'https://us13.api.mailchimp.com/schema/3.0/Lists/Instance.json; rel="describedBy", <https://us13.admin.mailchimp.com/lists/members/?id=XXXX>; rel="dashboard"'
+     * 
      * @param string $linkHeaderAsString
      * @return array
      */
