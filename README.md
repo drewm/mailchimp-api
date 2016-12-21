@@ -161,6 +161,8 @@ When your batch is finished, you can download the results from the URL given in 
 Webhooks
 --------
 
+**Note:** Use of the Webhooks functionality requires at least PHP 5.4.
+
 MailChimp [webhooks](http://kb.mailchimp.com/integrations/other-integrations/how-to-set-up-webhooks) enable your code to be notified of changes to lists and campaigns.
 
 When you set up a webhook you specify a URL on your server for the data to be sent to. This wrapper's Webhook class helps you catch that incoming webhook in a tidy way. It uses a subscription model, with your code subscribing to whichever webhook events it wants to listen for. You provide a callback function that the webhook data is passed to.
