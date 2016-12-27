@@ -112,6 +112,15 @@ class Batch
 
         return $this->MailChimp->get('batches/' . $batch_id);
     }
+    
+    /**
+     *  Get operations
+     *  @return array
+     */
+    public function get_operations()
+    {
+        return $this->operations;
+    }
 
     /**
      * Add an operation to the internal queue.
