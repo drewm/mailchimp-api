@@ -236,6 +236,12 @@ class MailChimp
         $response['body']    = curl_exec($ch);
         $response['headers'] = curl_getinfo($ch);
 
+        if (curl_errno($ch)) {
+            $this->last_error = sprintf('Curl error occured: %s', curl_error($ch));
+
+            return false;
+        }
+
         if (isset($response['headers']['request_header'])) {
             $this->last_request['headers'] = $response['headers']['request_header'];
         }
