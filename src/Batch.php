@@ -82,10 +82,10 @@ class Batch
 
     /**
      * Execute the batch request
-     * @param int $timeout Request timeout in seconds (optional)
-     * @return  array|false   Assoc array of API response, decoded from JSON
+     * @param  int|null $timeout Request timeout in seconds, null implies using MailChimp class' default timeout value
+     * @return array|false   Assoc array of API response, decoded from JSON
      */
-    public function execute($timeout = 10)
+    public function execute($timeout = null)
     {
         $req = array('operations' => $this->operations);
 
