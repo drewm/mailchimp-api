@@ -20,6 +20,7 @@ class MailChimp
         http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/
     */
     public $verify_ssl = true;
+    public $default_timeout = 10;
 
     private $request_successful = false;
     private $last_error         = '';
@@ -110,10 +111,10 @@ class MailChimp
      * Make an HTTP DELETE request - for deleting data
      * @param   string $method URL of the API request method
      * @param   array $args Assoc array of arguments (if any)
-     * @param   int $timeout Timeout limit for request in seconds
+     * @param   int|null $timeout Timeout limit for request in seconds, null implies using the default timeout value
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function delete($method, $args = array(), $timeout = 10)
+    public function delete($method, $args = array(), $timeout = null)
     {
         return $this->makeRequest('delete', $method, $args, $timeout);
     }
@@ -122,10 +123,10 @@ class MailChimp
      * Make an HTTP GET request - for retrieving data
      * @param   string $method URL of the API request method
      * @param   array $args Assoc array of arguments (usually your data)
-     * @param   int $timeout Timeout limit for request in seconds
+     * @param   int|null $timeout Timeout limit for request in seconds, null implies using the default timeout value
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function get($method, $args = array(), $timeout = 10)
+    public function get($method, $args = array(), $timeout = null)
     {
         return $this->makeRequest('get', $method, $args, $timeout);
     }
@@ -134,10 +135,10 @@ class MailChimp
      * Make an HTTP PATCH request - for performing partial updates
      * @param   string $method URL of the API request method
      * @param   array $args Assoc array of arguments (usually your data)
-     * @param   int $timeout Timeout limit for request in seconds
+     * @param   int|null $timeout Timeout limit for request in seconds, null implies using the default timeout value
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function patch($method, $args = array(), $timeout = 10)
+    public function patch($method, $args = array(), $timeout = null)
     {
         return $this->makeRequest('patch', $method, $args, $timeout);
     }
@@ -146,10 +147,10 @@ class MailChimp
      * Make an HTTP POST request - for creating and updating items
      * @param   string $method URL of the API request method
      * @param   array $args Assoc array of arguments (usually your data)
-     * @param   int $timeout Timeout limit for request in seconds
+     * @param   int|null $timeout Timeout limit for request in seconds, null implies using the default timeout value
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function post($method, $args = array(), $timeout = 10)
+    public function post($method, $args = array(), $timeout = null)
     {
         return $this->makeRequest('post', $method, $args, $timeout);
     }
@@ -158,10 +159,10 @@ class MailChimp
      * Make an HTTP PUT request - for creating new items
      * @param   string $method URL of the API request method
      * @param   array $args Assoc array of arguments (usually your data)
-     * @param   int $timeout Timeout limit for request in seconds
+     * @param   int|null $timeout Timeout limit for request in seconds, null implies using the default timeout value
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function put($method, $args = array(), $timeout = 10)
+    public function put($method, $args = array(), $timeout = null)
     {
         return $this->makeRequest('put', $method, $args, $timeout);
     }
@@ -171,15 +172,17 @@ class MailChimp
      * @param  string $http_verb The HTTP verb to use: get, post, put, patch, delete
      * @param  string $method The API method to be called
      * @param  array $args Assoc array of parameters to be passed
-     * @param int $timeout
+     * @param  int|null $timeout
      * @return array|false Assoc array of decoded result
      * @throws \Exception
      */
-    private function makeRequest($http_verb, $method, $args = array(), $timeout = 10)
+    private function makeRequest($http_verb, $method, $args = array(), $timeout = null)
     {
         if (!function_exists('curl_init') || !function_exists('curl_setopt')) {
             throw new \Exception("cURL support is required, but can't be found.");
         }
+
+        $timeout = $timeout === null ? $this->default_timeout : $timeout;
 
         $url = $this->api_endpoint . '/' . $method;
 
