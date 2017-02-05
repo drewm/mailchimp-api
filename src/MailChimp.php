@@ -29,22 +29,22 @@ class MailChimp
     /**
      * Create a new instance
      * @param string $api_key Your MailChimp API key
+     * @param string $api_endpoint Optional custom API endpoint
      * @throws \Exception
      */
-    public function __construct($api_key,$api_endpoint=null)
+    public function __construct($api_key, $api_endpoint = null)
     {
         $this->api_key = $api_key;
-        if(is_null($api_endpoint)){
-          if (strpos($this->api_key, '-') === false) {
-          throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
-          }
-
-          list(, $data_center) = explode('-', $this->api_key);
-          $this->api_endpoint  = str_replace('<dc>', $data_center, $this->api_endpoint);
-      } else {
-        $this->api_endpoint  = $api_endpoint;
-        $this->last_response = array('headers' => null, 'body' => null);
-      }
+        if (is_null($api_endpoint)){
+            if (strpos($this->api_key, '-') === false) {
+                throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
+            }
+            list(, $data_center) = explode('-', $this->api_key);
+            $this->api_endpoint  = str_replace('<dc>', $data_center, $this->api_endpoint);
+        } else {
+            $this->api_endpoint  = $api_endpoint;
+            $this->last_response = array('headers' => null, 'body' => null);
+        }
     }
 
     /**
