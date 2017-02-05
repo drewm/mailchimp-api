@@ -35,7 +35,8 @@ class MailChimp
     public function __construct($api_key, $api_endpoint = null)
     {
         $this->api_key = $api_key;
-        if (is_null($api_endpoint)){
+        
+        if ($api_endpoint === null) {
             if (strpos($this->api_key, '-') === false) {
                 throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
             }
@@ -43,8 +44,9 @@ class MailChimp
             $this->api_endpoint  = str_replace('<dc>', $data_center, $this->api_endpoint);
         } else {
             $this->api_endpoint  = $api_endpoint;
-            $this->last_response = array('headers' => null, 'body' => null);
         }
+
+        $this->last_response = array('headers' => null, 'body' => null);
     }
 
     /**
@@ -184,9 +186,9 @@ class MailChimp
         $this->last_error = '';
         $this->request_successful = false;
         $response = array(
-            'headers' => null, //array of details from curl_getinfo()
-            'httpHeaders' => null, //array of HTTP headers
-            'body' => null //content of the response
+            'headers'     => null, // array of details from curl_getinfo()
+            'httpHeaders' => null, // array of HTTP headers
+            'body'        => null // content of the response
         );
         $this->last_response = $response;
 
@@ -289,7 +291,7 @@ class MailChimp
         $headers = array();
         
         foreach (explode("\r\n", $headersAsString) as $i => $line) {
-            if ($i === 0) { //HTTP code
+            if ($i === 0) { // HTTP code
                 continue;
             }
             
