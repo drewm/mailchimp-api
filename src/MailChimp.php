@@ -31,18 +31,20 @@ class MailChimp
      * @param string $api_key Your MailChimp API key
      * @throws \Exception
      */
-    public function __construct($api_key)
+    public function __construct($api_key,$api_endpoint=null)
     {
         $this->api_key = $api_key;
+        if(is_null($api_endpoint)){
+          if (strpos($this->api_key, '-') === false) {
+          throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
+          }
 
-        if (strpos($this->api_key, '-') === false) {
-            throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
-        }
-
-        list(, $data_center) = explode('-', $this->api_key);
-        $this->api_endpoint  = str_replace('<dc>', $data_center, $this->api_endpoint);
-
+          list(, $data_center) = explode('-', $this->api_key);
+          $this->api_endpoint  = str_replace('<dc>', $data_center, $this->api_endpoint);
+      } else {
+        $this->api_endpoint  = $api_endpoint;
         $this->last_response = array('headers' => null, 'body' => null);
+      }
     }
 
     /**
@@ -252,7 +254,7 @@ class MailChimp
 
         return $formattedResponse;
     }
-    
+
     /**
      * @return string The url to the API endpoint
      */
