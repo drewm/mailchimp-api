@@ -263,9 +263,9 @@ class MailChimp
 
         $formattedResponse = $this->formatResponse($response);
 
-        $this->determineSuccess($response, $formattedResponse);
+        $isSuccess = $this->determineSuccess($response, $formattedResponse);
 
-        return $formattedResponse;
+        return is_array($formattedResponse) ? $formattedResponse : $isSuccess;
     }
 
     /**
