@@ -284,7 +284,7 @@ class MailChimp
      */
     private function getHeadersAsArray($headersAsString)
     {
-        $headers = [];
+        $headers = array();
         
         foreach (explode("\r\n", $headersAsString) as $i => $line) {
             if ($i === 0) { //HTTP code
@@ -296,7 +296,7 @@ class MailChimp
                 continue;
             }
             
-            list ($key, $value) = explode(': ', $line);
+            list($key, $value) = explode(': ', $line);
             
             if ($key == 'Link') {
                 $value = array_merge(
@@ -324,7 +324,7 @@ class MailChimp
      */
     private function getLinkHeaderAsArray($linkHeaderAsString)
     {
-        $urls = [];
+        $urls = array();
         
         if (preg_match_all('/<(.*?)>\s*;\s*rel="(.*?)"\s*/', $linkHeaderAsString, $matches)) {
             foreach ($matches[2] as $i => $relName) {
