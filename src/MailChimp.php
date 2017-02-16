@@ -247,10 +247,10 @@ class MailChimp
         
         $responseContent = curl_exec($ch);
         
+        $response['headers'] = curl_getinfo($ch);
         if ($responseContent === false) {
             $this->last_error = curl_error($ch);
         } else {
-            $response['headers'] = curl_getinfo($ch);
             $headerSize = $response['headers']['header_size'];
             
             $response['httpHeaders'] = $this->getHeadersAsArray(substr($responseContent, 0, $headerSize));
