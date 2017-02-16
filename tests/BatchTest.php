@@ -2,7 +2,7 @@
 
 use \DrewM\MailChimp\MailChimp;
 
-class ListsTest extends PHPUnit_Framework_TestCase
+class BatchTest extends PHPUnit_Framework_TestCase
 {
 
     public function setUp()
@@ -15,7 +15,7 @@ class ListsTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function testGetLists()
+    public function testNewBatch()
     {
         $MC_API_KEY = getenv('MC_API_KEY');
 
@@ -24,9 +24,9 @@ class ListsTest extends PHPUnit_Framework_TestCase
         }
 
         $MailChimp = new MailChimp($MC_API_KEY);
-        $lists = $MailChimp->get('lists');
+        $Batch = $MailChimp->new_batch();
 
-        $this->assertArrayHasKey('lists', $lists);
+        $this->assertInstanceOf('DrewM\MailChimp\Batch', $Batch);
     }
 
 }
