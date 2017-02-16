@@ -390,7 +390,7 @@ class MailChimp
             return false;
         }
 
-        if( $response['headers'] && $response['headers']['total_time'] >= $timeout ) {
+        if( $timeout > 0 && $response['headers'] && $response['headers']['total_time'] >= $timeout ) {
             $this->last_error = sprintf('Request timed out after %f seconds.', $response['headers']['total_time'] );
             return false;
         }
