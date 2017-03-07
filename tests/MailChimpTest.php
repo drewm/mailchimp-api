@@ -73,4 +73,32 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($MailChimp->success());
     }
 
+    /* This test requires that your test list have:
+     * a) a list
+     * b) enough entries that the curl request will timeout after 1 second.
+     * How many this is may depend on your network connection to the Mailchimp servers.
+     */
+    public function testRequestTimeout()
+    {
+        $this->markTestSkipped('CI server too fast to realistically test.');
+
+
+        $MC_API_KEY = getenv('MC_API_KEY');
+
+        if (!$MC_API_KEY) {
+            $this->markTestSkipped('No API key in ENV');
+        }
+
+        $MailChimp = new MailChimp($MC_API_KEY);
+        $result = $MailChimp->get('lists');
+        $list_id = $result['lists'][0]['id'];
+
+        $args = array( 'count' => 1000 );
+        $timeout = 1;
+        $result = $MailChimp->get("lists/$list_id/members", $args, $timeout );
+        $this->assertFalse( $result );
+
+        $error = $MailChimp->getLastError();
+        $this->assertRegExp( '/Request timed out after 1.\d+ seconds/', $error );
+    }
 }
