@@ -249,7 +249,8 @@ class MailChimp
         
         $response['headers'] = curl_getinfo($ch);
         if ($responseContent === false) {
-            $this->last_error = curl_error($ch);
+            $this->last_error = "Curl Error: " . curl_error($ch);
+            $formattedResponse = false;
         } else {
             $headerSize = $response['headers']['header_size'];
             
@@ -259,13 +260,15 @@ class MailChimp
             if (isset($response['headers']['request_header'])) {
                 $this->last_request['headers'] = $response['headers']['request_header'];
             }
+
+            $formattedResponse = $this->formatResponse($response);
+            
+            $this->determineSuccess($response, $formattedResponse, $timeout);    
         }
 
+        $this->last_response = $response;
+        
         curl_close($ch);
-
-        $formattedResponse = $this->formatResponse($response);
-
-        $this->determineSuccess($response, $formattedResponse, $timeout);
 
         return $formattedResponse;
     }
@@ -360,8 +363,6 @@ class MailChimp
      */
     private function formatResponse($response)
     {
-        $this->last_response = $response;
-
         if (!empty($response['body'])) {
             return json_decode($response['body'], true);
         }
