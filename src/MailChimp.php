@@ -309,9 +309,7 @@ class MailChimp
             return false;
         }
 
-        // The original error is appended so that curl errors are communicated to the user.
-        // An example of one such curl error is #60: SSL certificate problem: unable to get local issuer certificate
-        $this->last_error = 'Unknown error, call getLastResponse() for more details: ' . $this->last_error;
+        $this->last_error = 'Unknown error, call getLastResponse() to find out what happened.';
         return false;
     }
 
