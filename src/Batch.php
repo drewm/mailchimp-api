@@ -112,7 +112,7 @@ class Batch
 
         return $this->MailChimp->get('batches/' . $batch_id);
     }
-    
+
     /**
      *  Get operations
      *  @return array
@@ -139,8 +139,13 @@ class Batch
         );
 
         if ($args) {
-            $key = ($http_verb == 'GET' ? 'params' : 'body');
-            $operation[$key] = json_encode($args);
+            if($http_verb == 'GET') {
+                $key = 'params';
+                $operation[$key] = $args;
+            } else {
+                $key = 'body';
+                $operation[$key] = json_encode($args);
+            }
         }
 
         $this->operations[] = $operation;
