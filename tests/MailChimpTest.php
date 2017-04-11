@@ -101,4 +101,17 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
         $error = $MailChimp->getLastError();
         $this->assertRegExp( '/Request timed out after 1.\d+ seconds/', $error );
     }
+
+    public function testCurlErrorPassthrough()
+    {
+        $badDataCenter = 'us999999999';
+
+        $MailChimp = new MailChimp("abc123-$badDataCenter");
+
+        $MailChimp->get('lists');
+
+        // Ensure that the curl error is not overwritten and makes it back to the user.
+        // If this assertion passes, other curl errors should make it back to the user as well.
+        $this->assertEquals("Curl Error: Couldn't resolve host '$badDataCenter.api.mailchimp.com'", $MailChimp->getLastError());
+    }
 }
