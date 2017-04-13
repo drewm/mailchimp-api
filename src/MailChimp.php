@@ -92,7 +92,7 @@ class MailChimp
     /**
      * Get the last error returned by either the network transport, or by the API.
      * If something didn't work, this should contain the string describing the problem.
-     * @return  array|false  describing the error
+     * @return  string|false  describing the error
      */
     public function getLastError()
     {
@@ -241,16 +241,22 @@ class MailChimp
         
         $responseContent     = curl_exec($ch);
         $response['headers'] = curl_getinfo($ch);
-        curl_close($ch);
-
-        $response            = $this->setResponseState($response, $responseContent);
+        $response            = $this->setResponseState($response, $responseContent, $ch);
         $formattedResponse   = $this->formatResponse($response);
+
+        curl_close($ch);
 
         $this->determineSuccess($response, $formattedResponse, $timeout);
 
         return $formattedResponse;
     }
 
+    /**
+    * @param string $http_verb
+    * @param string $method
+    * @param string $url
+    * @param integer $timeout
+    */
     private function prepareStateForRequest($http_verb, $method, $url, $timeout)
     {
         $this->last_error = '';
@@ -371,7 +377,7 @@ class MailChimp
      * @param string $responseContent The body of the response from the curl request
      * * @return array    The modified response
      */
-    private function setResponseState($response, $responseContent)
+    private function setResponseState($response, $responseContent, $ch)
     {
         if ($responseContent === false) {
             $this->last_error = curl_error($ch);
