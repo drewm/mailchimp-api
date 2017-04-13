@@ -62,6 +62,15 @@ class MailChimp
     }
 
     /**
+     * @return string The url to the API endpoint
+     */
+    public function getApiEndpoint()
+    {
+        return $this->api_endpoint;
+    }
+
+
+    /**
      * Convert an email address into a 'subscriber hash' for identifying the subscriber in a method URL
      * @param   string $email The subscriber's email address
      * @return  string          Hashed version of the input
@@ -185,22 +194,7 @@ class MailChimp
 
         $url = $this->api_endpoint . '/' . $method;
 
-        $this->last_error = '';
-        $this->request_successful = false;
-        $response = array(
-            'headers'     => null, // array of details from curl_getinfo()
-            'httpHeaders' => null, // array of HTTP headers
-            'body'        => null // content of the response
-        );
-        $this->last_response = $response;
-
-        $this->last_request = array(
-            'method'  => $http_verb,
-            'path'    => $method,
-            'url'     => $url,
-            'body'    => '',
-            'timeout' => $timeout,
-        );
+        $response = $this->prepareStateForRequest($http_verb, $method, $url, $timeout);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -245,37 +239,39 @@ class MailChimp
                 break;
         }
         
-        $responseContent = curl_exec($ch);
-        
+        $responseContent     = curl_exec($ch);
         $response['headers'] = curl_getinfo($ch);
-        if ($responseContent === false) {
-            $this->last_error = curl_error($ch);
-        } else {
-            $headerSize = $response['headers']['header_size'];
-            
-            $response['httpHeaders'] = $this->getHeadersAsArray(substr($responseContent, 0, $headerSize));
-            $response['body'] = substr($responseContent, $headerSize);
-
-            if (isset($response['headers']['request_header'])) {
-                $this->last_request['headers'] = $response['headers']['request_header'];
-            }
-        }
-
         curl_close($ch);
 
-        $formattedResponse = $this->formatResponse($response);
+        $response            = $this->setResponseState($response, $responseContent);
+        $formattedResponse   = $this->formatResponse($response);
 
         $this->determineSuccess($response, $formattedResponse, $timeout);
 
         return $formattedResponse;
     }
 
-    /**
-     * @return string The url to the API endpoint
-     */
-    public function getApiEndpoint()
+    private function prepareStateForRequest($http_verb, $method, $url, $timeout)
     {
-        return $this->api_endpoint;
+        $this->last_error = '';
+        
+        $this->request_successful = false;
+
+        $this->last_response = array(
+            'headers'     => null, // array of details from curl_getinfo()
+            'httpHeaders' => null, // array of HTTP headers
+            'body'        => null // content of the response
+        );
+
+        $this->last_request = array(
+            'method'  => $http_verb,
+            'path'    => $method,
+            'url'     => $url,
+            'body'    => '',
+            'timeout' => $timeout,
+        );
+
+        return $this->last_response;
     }
 
     /**
@@ -367,6 +363,31 @@ class MailChimp
         }
 
         return false;
+    }
+
+    /**
+     * Do post-request formatting and setting state from the response
+     * @param array $response The response from the curl request
+     * @param string $responseContent The body of the response from the curl request
+     * * @return array    The modified response
+     */
+    private function setResponseState($response, $responseContent)
+    {
+        if ($responseContent === false) {
+            $this->last_error = curl_error($ch);
+        } else {
+        
+            $headerSize = $response['headers']['header_size'];
+            
+            $response['httpHeaders'] = $this->getHeadersAsArray(substr($responseContent, 0, $headerSize));
+            $response['body'] = substr($responseContent, $headerSize);
+
+            if (isset($response['headers']['request_header'])) {
+                $this->last_request['headers'] = $response['headers']['request_header'];
+            }
+        }
+
+        return $response;
     }
 
     /**
