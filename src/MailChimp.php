@@ -96,7 +96,7 @@ class MailChimp
      */
     public function getLastError()
     {
-        return $this->last_error ?: false;
+        return $this->last_error ? $this->last_error : false;
     }
 
     /**
