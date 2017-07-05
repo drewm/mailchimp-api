@@ -1,8 +1,9 @@
 <?php
 
 use \DrewM\MailChimp\MailChimp;
+use PHPUnit\Framework\TestCase;
 
-class MailChimpTest extends PHPUnit_Framework_TestCase
+class MailChimpTest extends TestCase
 {
 
     public function setUp()
@@ -18,7 +19,7 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidAPIKey()
     {
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $MailChimp = new MailChimp('abc');
     }
 
