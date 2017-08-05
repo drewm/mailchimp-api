@@ -1,8 +1,6 @@
 MailChimp API
 =============
 
-**This branch has been merged into master - please use that instead. This branch should be considered obsolete.**
-
 Super-simple, minimum abstraction MailChimp API v3 wrapper, in PHP.
 
 I hate complex wrappers. This lets you get from the MailChimp API docs to the code as directly as possible.
