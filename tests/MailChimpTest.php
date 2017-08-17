@@ -78,6 +78,7 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
      * b) enough entries that the curl request will timeout after 1 second.
      * How many this is may depend on your network connection to the Mailchimp servers.
      */
+    /*
     public function testRequestTimeout()
     {
         $this->markTestSkipped('CI server too fast to realistically test.');
@@ -101,4 +102,5 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
         $error = $MailChimp->getLastError();
         $this->assertRegExp( '/Request timed out after 1.\d+ seconds/', $error );
     }
+    */
 }
