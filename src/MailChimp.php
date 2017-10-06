@@ -21,6 +21,10 @@ class MailChimp
         Read before disabling:
         http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/
     */
+    public $whitelist = array(
+        '127.0.0.1',
+        '::1'
+    );
     public $verify_ssl = true;
 
     private $request_successful = false;
@@ -36,6 +40,10 @@ class MailChimp
      */
     public function __construct($api_key, $api_endpoint = null)
     {
+        /* if is localhost, not verify ssl for developer mode */
+        if(in_array($_SERVER['REMOTE_ADDR'], $this->whitelist)) {
+            $this->verify_ssl = false;
+        }
         $this->api_key = $api_key;
         
         if ($api_endpoint === null) {
