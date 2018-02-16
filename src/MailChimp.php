@@ -8,7 +8,7 @@ namespace DrewM\MailChimp;
  * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author  Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.4
+ * @version 2.5
  */
 class MailChimp
 {
@@ -273,9 +273,9 @@ class MailChimp
 
         curl_close($ch);
 
-        $this->determineSuccess($response, $formattedResponse, $timeout);
+        $isSuccess = $this->determineSuccess($response, $formattedResponse, $timeout);
 
-        return $formattedResponse;
+        return is_array($formattedResponse) ? $formattedResponse : $isSuccess;
     }
 
     /**
