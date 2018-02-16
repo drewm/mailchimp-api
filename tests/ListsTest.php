@@ -1,8 +1,9 @@
 <?php
 
 use \DrewM\MailChimp\MailChimp;
+use PHPUnit\Framework\TestCase;
 
-class ListsTest extends PHPUnit_Framework_TestCase
+class ListsTest extends TestCase
 {
 
     public function setUp()
@@ -24,7 +25,7 @@ class ListsTest extends PHPUnit_Framework_TestCase
         }
 
         $MailChimp = new MailChimp($MC_API_KEY);
-        $lists = $MailChimp->get('lists');
+        $lists     = $MailChimp->get('lists');
 
         $this->assertArrayHasKey('lists', $lists);
     }

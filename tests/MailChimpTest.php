@@ -1,8 +1,9 @@
 <?php
 
 use \DrewM\MailChimp\MailChimp;
+use PHPUnit\Framework\TestCase;
 
-class MailChimpTest extends PHPUnit_Framework_TestCase
+class MailChimpTest extends TestCase
 {
 
     public function setUp()
@@ -18,14 +19,14 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidAPIKey()
     {
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $MailChimp = new MailChimp('abc');
     }
 
     public function testTestEnvironment()
     {
         $MC_API_KEY = getenv('MC_API_KEY');
-        $message = 'No environment variables! Copy .env.example -> .env and fill out your MailChimp account details.';
+        $message    = 'No environment variables! Copy .env.example -> .env and fill out your MailChimp account details.';
         $this->assertNotEmpty($MC_API_KEY, $message);
     }
 
@@ -51,9 +52,9 @@ class MailChimpTest extends PHPUnit_Framework_TestCase
 
         $MailChimp = new MailChimp($MC_API_KEY);
 
-        $email = 'Foo@Example.Com';
+        $email    = 'Foo@Example.Com';
         $expected = md5(strtolower($email));
-        $result = $MailChimp->subscriberHash($email);
+        $result   = $MailChimp->subscriberHash($email);
 
         $this->assertEquals($expected, $result);
     }
