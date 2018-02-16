@@ -1,8 +1,9 @@
 <?php
 
 use \DrewM\MailChimp\MailChimp;
+use PHPUnit\Framework\TestCase;
 
-class ListsTest extends PHPUnit_Framework_TestCase
+class ListsTest extends TestCase
 {
 
     public function setUp()
