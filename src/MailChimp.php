@@ -8,7 +8,8 @@ namespace DrewM\MailChimp;
  * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author  Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.5
+ * @author  Matteo Lazzarin <desonant.promo@gmail.com>
+ * @version 2.6
  */
 class MailChimp
 {
@@ -27,6 +28,7 @@ class MailChimp
     private $last_error         = '';
     private $last_response      = array();
     private $last_request       = array();
+    private $errors_array       = array();
 
     /**
      * Create a new instance
@@ -46,7 +48,7 @@ class MailChimp
 
         if ($api_endpoint === null) {
             if (strpos($this->api_key, '-') === false) {
-                throw new \Exception("Invalid MailChimp API key supplied.");
+                throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
             }
             list(, $data_center) = explode('-', $this->api_key);
             $this->api_endpoint = str_replace('<dc>', $data_center, $this->api_endpoint);
@@ -109,6 +111,17 @@ class MailChimp
     public function getLastError()
     {
         return $this->last_error ?: false;
+    }
+	
+	/**
+	 * Get errors array, in case of multiple errors got back from body response.
+	 * Generically, this errors are thrown from wrong inserted MERGE_FIELDS value, giving a 400 status code
+	 *
+	 * @return array   the errors array
+	 */
+    public function getErrorsArray()
+    {
+    	return $this->errors_array;
     }
 
     /**
@@ -272,6 +285,11 @@ class MailChimp
         $formattedResponse   = $this->formatResponse($response);
 
         curl_close($ch);
+        
+        if ( array_key_exists('errors', $formattedResponse ) )
+        {
+        	$this->errors_array = $formattedResponse['errors'];
+        }
 
         $isSuccess = $this->determineSuccess($response, $formattedResponse, $timeout);
 
