@@ -285,11 +285,6 @@ class MailChimp
         $formattedResponse   = $this->formatResponse($response);
 
         curl_close($ch);
-        
-        if ( array_key_exists('errors', $formattedResponse ) )
-        {
-        	$this->errors_array = $formattedResponse['errors'];
-        }
 
         $isSuccess = $this->determineSuccess($response, $formattedResponse, $timeout);
 
@@ -468,6 +463,10 @@ class MailChimp
         if ($status >= 200 && $status <= 299) {
             $this->request_successful = true;
             return true;
+        }
+		
+		if (array_key_exists('errors', $formattedResponse)){
+        	$this->errors_array = $formattedResponse['errors'];
         }
 
         if (isset($formattedResponse['detail'])) {
