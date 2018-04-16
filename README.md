@@ -153,6 +153,13 @@ The result includes a batch ID. At a later point, you can check the status of yo
 
 ```php
 $MailChimp->new_batch($batch_id);
+$result = $Batch->get_errors();
+```
+
+You can also get the errors from your batch:
+
+```php
+$MailChimp->new_batch($batch_id);
 $result = $Batch->check_status();
 ```
 
