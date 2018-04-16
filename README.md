@@ -153,14 +153,14 @@ The result includes a batch ID. At a later point, you can check the status of yo
 
 ```php
 $MailChimp->new_batch($batch_id);
-$result = $Batch->get_errors();
+$result = $Batch->check_status();
 ```
 
 You can also get the errors from your batch:
 
 ```php
 $MailChimp->new_batch($batch_id);
-$result = $Batch->check_status();
+$result = $Batch->get_errors();
 ```
 
 When your batch is finished, you can download the results from the URL given in the response. In the JSON, the result of each operation will be keyed by the ID you used as the first argument for the request.
