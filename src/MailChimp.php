@@ -465,7 +465,7 @@ class MailChimp
             return true;
         }
 		
-		if (array_key_exists('errors', $formattedResponse)){
+		if (isset($formattedResponse['errors'])){
         	$this->errors_array = $formattedResponse['errors'];
         }
 
