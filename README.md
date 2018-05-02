@@ -190,6 +190,41 @@ print_r($result);
 
 There doesn't appear to be any documentation for the content of the webhook data. It's helpful to use something like [ngrok](https://ngrok.com) for tunneling the webhooks to your development machine - you can then use its web interface to inspect what's been sent and to replay incoming webhooks while you debug your code.
 
+Oauth
+-----
+If you are using [Oauth](http://developer.mailchimp.com/documentation/mailchimp/guides/how-to-use-oauth2/) to obtain an access token, this library can handle the "handshake" for you.
+ 
+You must first send the user to the `authorize_uri`. You can get this url like this:
+
+```php 
+use \DrewM\MailChimp\OAuth;
+
+$client_id =   '12345676543';
+$redirect_url =  'https://www.some-domain.com/callback_file.php';
+
+$url = OAuth::getAuthUrl($client_id, $redirect_url);
+
+echo '<a href="'. $url . '">Login via mailchimp</a>';
+```
+
+Then the user will input their username and password to approve your application and will be redirected to the `redirect_uri` you provided along with a `code`.
+
+Since you do not yet have an API key you will need to call the `getAccessToken()` method statically like this:
+
+```php
+use \DrewM\MailChimp\OAuth;
+
+$code = 'abc123abc123abc123abc123';
+$client_id =   '12345676543';
+$client_secret =  '789xyz789xyz789xyz789xyz';
+$redirect_url =  'https://www.some-domain.com/callback_file.php';
+
+$UserAPIKey = OAuth::getAccessToken($code, $client_id, $client_secret, $redirect_url);
+```
+
+If the handshake is successful, then this method will return a string containing your API key like this: `123abc123abc123abc123abc123abc-us0`. This API key can now be used to instantiate the `Mailchimp` class above.
+
+
 Troubleshooting
 ---------------
 
