@@ -14,7 +14,7 @@ class MailChimp
 {
     private $api_key;
     private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
-    private $proxyParams  = array();
+    private $proxy;
 
     const TIMEOUT = 10;
 
@@ -34,18 +34,18 @@ class MailChimp
      *
      * @param string $api_key      Your MailChimp API key
      * @param string $api_endpoint Optional custom API endpoint
-     * @param array  $proxyParams  Optional proxy settings
+     * @param string $proxy Optional proxy
      *
      * @throws \Exception
      */
-    public function __construct($api_key, $api_endpoint = null, $proxyParams = array())
+    public function __construct($api_key, $api_endpoint = null, $proxy = null)
     {
         if (!function_exists('curl_init') || !function_exists('curl_setopt')) {
             throw new \Exception("cURL support is required, but can't be found.");
         }
 
         $this->api_key = $api_key;
-        $this->proxyParams = $proxyParams;
+        $this->proxy   = $proxy;
 
         if ($api_endpoint === null) {
             if (strpos($this->api_key, '-') === false) {
@@ -243,8 +243,8 @@ class MailChimp
         curl_setopt($ch, CURLOPT_ENCODING, '');
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-        if (isset($this->proxyParams['proxy'])) {
-            curl_setopt($ch, CURLOPT_PROXY, $this->proxyParams['proxy']);
+        if (null !== $this->proxy) {
+            curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
         }
 
         switch ($http_verb) {
