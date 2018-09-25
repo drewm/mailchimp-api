@@ -1,28 +1,47 @@
 {
     "name": "drewm/mailchimp-api",
+    "type": "library",
     "description": "Super-simple, minimum abstraction MailChimp API v3 wrapper",
-    "license": "MIT",
-    "require": {
-        "php": ">=5.3",
-        "ext-curl": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "7.0.*",
-        "vlucas/phpdotenv": "^2.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "DrewM\\MailChimp\\": "src"
-        }
-    },
+    "keywords": ["MailChimp"],
     "homepage": "https://github.com/drewm/mailchimp-api",
-    "authors": [ 
+    "license": "MIT",
+    "authors": [
         {
             "name": "Drew McLellan",
             "email": "drew.mclellan@gmail.com",
             "homepage": "http://allinthehead.com/"
 
         }
-    ]
-
+    ],
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
+    "require": {
+        "php": ">=5.4",
+        "ext-curl": "*",
+        "symfony/polyfill-mbstring": "^1.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.8.*|5.5.*|6.5.*|7.0.*",
+        "symfony/dotenv": "*",
+        "friendsofphp/php-cs-fixer": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "DrewM\\MailChimp\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DrewM\\MailChimp\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "php-cs-check": "vendor/bin/php-cs-fixer fix --config=.php_cs --dry-run --using-cache=no",
+        "php-cs-fixer": "vendor/bin/php-cs-fixer fix --config=.php_cs --diff --verbose"
+    }
 }

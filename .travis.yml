@@ -1,14 +1,35 @@
 language: php
-sudo: true
+
+## Run on container environment
+dist: trusty
+sudo: false
+
+git:
+    depth: 2
+
+## Cache composer
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+env:
+    - COMPOSER_DISABLE_XDEBUG_WARN=1
+
 php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
+    - 5.6
+    - 7.0
+    - 7.1
+    - 7.2
+
 before_script:
-  - composer self-update
-  - composer install --prefer-source --no-interaction --dev --ignore-platform-reqs
+    - composer self-update
+    - cp .env.example .env
+    - perl -i -pe "s|^MC_API_KEY=.*|MC_API_KEY=fake-information|g" .env
+    - perl -i -pe "s|^MC_LIST_ID=.*|MC_LIST_ID=fake-information|g" .env
+
+install:
+    - composer install --prefer-dist
+
 script:
-  - ./scripts/travis.sh
+    - composer php-cs-check
+    - vendor/bin/phpunit
