@@ -2,6 +2,12 @@
 
 namespace DrewM\MailChimp;
 
+if (!class_exists('\DrewM\MailChimp\Exception\MailChimpException')) {
+    require_once 'Exception/MailChimpException.php';
+}
+
+use DrewM\MailChimp\Exception\MailChimpException;
+
 /**
  * Super-simple, minimum abstraction MailChimp API v3 wrapper
  * MailChimp API v3: http://developer.mailchimp.com
@@ -34,19 +40,19 @@ class MailChimp
      * @param string $api_key      Your MailChimp API key
      * @param string $api_endpoint Optional custom API endpoint
      *
-     * @throws \Exception
+     * @throws MailChimpException
      */
     public function __construct($api_key, $api_endpoint = null)
     {
         if (!function_exists('curl_init') || !function_exists('curl_setopt')) {
-            throw new \Exception("cURL support is required, but can't be found.");
+            throw new MailChimpException("cURL support is required, but can't be found.");
         }
 
         $this->api_key = $api_key;
 
         if ($api_endpoint === null) {
             if (strpos($this->api_key, '-') === false) {
-                throw new \Exception("Invalid MailChimp API key supplied.");
+                throw new MailChimpException("Invalid MailChimp API key supplied.");
             }
             list(, $data_center) = explode('-', $this->api_key);
             $this->api_endpoint = str_replace('<dc>', $data_center, $this->api_endpoint);
