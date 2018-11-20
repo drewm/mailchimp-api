@@ -329,31 +329,36 @@ class MailChimp
      */
     private function getHeadersAsArray($headersAsString)
     {
-        $headers = array();
+        $headerSections = [];
+        foreach (explode("\r\n\r\n", $headersAsString) as $headerSection) {
+            $headers = array();
 
-        foreach (explode("\r\n", $headersAsString) as $i => $line) {
-            if ($i === 0) { // HTTP code
-                continue;
+            foreach (explode("\r\n", $headerSection) as $i => $line) {
+                if ($i === 0) { // HTTP code
+                    continue;
+                }
+
+                $line = trim($line);
+                if (empty($line)) {
+                    continue;
+                }
+
+                list($key, $value) = explode(': ', $line);
+
+                if ($key == 'Link') {
+                    $value = array_merge(
+                        array('_raw' => $value),
+                        $this->getLinkHeaderAsArray($value)
+                    );
+                }
+
+                $headers[$key] = $value;
             }
 
-            $line = trim($line);
-            if (empty($line)) {
-                continue;
-            }
-
-            list($key, $value) = array_pad(explode(': ', $line, 2), 2, null);
-
-            if ($key == 'Link') {
-                $value = array_merge(
-                    array('_raw' => $value),
-                    $this->getLinkHeaderAsArray($value)
-                );
-            }
-
-            $headers[$key] = $value;
+            $headerSections[] = $headers;
         }
 
-        return $headers;
+        return array_pop($headerSections);
     }
 
     /**
