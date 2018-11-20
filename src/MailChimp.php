@@ -329,7 +329,7 @@ class MailChimp
      */
     private function getHeadersAsArray($headersAsString)
     {
-        $headerSections = [];
+        $headerSections = array();
         foreach (explode("\r\n\r\n", $headersAsString) as $headerSection) {
             $headers = array();
 
