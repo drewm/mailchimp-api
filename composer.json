@@ -3,12 +3,8 @@
     "description": "Super-simple, minimum abstraction MailChimp API v3 wrapper",
     "license": "MIT",
     "require": {
-        "php": ">=5.3",
-        "ext-curl": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "7.0.*",
-        "vlucas/phpdotenv": "^2.0"
+        "php": "~7.2",
+        "guzzlehttp/guzzle": "^6.1"
     },
     "autoload": {
         "psr-4": {
@@ -16,7 +12,7 @@
         }
     },
     "homepage": "https://github.com/drewm/mailchimp-api",
-    "authors": [ 
+    "authors": [
         {
             "name": "Drew McLellan",
             "email": "drew.mclellan@gmail.com",
@@ -24,5 +20,4 @@
 
         }
     ]
-
 }
