@@ -257,31 +257,25 @@ class MailChimp
         try {
             $response = $this->client->send($request);
         } catch (RequestException $e) {
-            $errorMessage = $e->getMessage();
             if (null === $response = $e->getResponse()) {
-                throw $e;
+                $errorMessage = $e->getMessage();
             }
         }
 
         $end = microtime(true);
 
         $requestHeader = $this->getRequestHeader($request);
-        $responseHeader = $this->getResponseHeader($response);
-        $responseBody = $responseHeader . (string) $response->getBody();
+        $responseHeader = null !== $response ? $this->getResponseHeader($response) : false;
+        $responseBody = null !== $response ? $responseHeader . (string) $response->getBody() : false;
 
         $dummyResponse['headers'] = [
-            'http_code' => $response->getStatusCode(),
-            'header_size' => strlen($responseHeader),
+            'http_code' => null !== $response ? $response->getStatusCode() : 0,
+            'header_size' => null !== $response ? strlen($responseHeader) : 0,
             'total_time' => $end - $start,
             'request_header' => $requestHeader
         ];
 
-        $dummyResponse = $this->setResponseState(
-            $dummyResponse,
-            '' === $errorMessage ? $responseBody : false,
-            $errorMessage
-        );
-
+        $dummyResponse = $this->setResponseState($dummyResponse, $responseBody, $errorMessage);
         $formattedResponse = $this->formatResponse($dummyResponse);
 
         $isSuccess = $this->determineSuccess($dummyResponse, $formattedResponse, $timeout);
@@ -312,7 +306,7 @@ class MailChimp
     }
 
     /**
-     * @param ResponseInterface $response
+     * @param ResponseInterface $request
      * @return string
      */
     private function getResponseHeader(ResponseInterface $response): string
@@ -451,16 +445,17 @@ class MailChimp
     /**
      * Do post-request formatting and setting state from the response
      *
-     * @param array  $response        The response from the curl request
-     * @param string $responseContent The body of the response from the curl request
-     * @param string $errorMessage    The error message
-     * @return array The modified response
+     * @param array    $response        The response from the curl request
+     * @param string   $responseContent The body of the response from the curl request
+     * @param resource $errorMessage    The error message
+     * @return array    The modified response
      */
     private function setResponseState($response, $responseContent, $errorMessage)
     {
         if ($responseContent === false) {
             $this->last_error = $errorMessage;
         } else {
+
             $headerSize = $response['headers']['header_size'];
 
             $response['httpHeaders'] = $this->getHeadersAsArray(substr($responseContent, 0, $headerSize));
