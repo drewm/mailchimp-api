@@ -1,21 +1,15 @@
 <?php
 
-use \DrewM\MailChimp\MailChimp;
+namespace DrewM\MailChimp\Tests;
+
+use DrewM\MailChimp\MailChimp;
 use PHPUnit\Framework\TestCase;
 
 class BatchTest extends TestCase
 {
-
-    public function setUp()
-    {
-        $env_file_path = __DIR__ . '/../';
-
-        if (file_exists($env_file_path . '.env')) {
-            $dotenv = new Dotenv\Dotenv($env_file_path);
-            $dotenv->load();
-        }
-    }
-
+    /**
+     * @throws \Exception
+     */
     public function testNewBatch()
     {
         $MC_API_KEY = getenv('MC_API_KEY');
@@ -25,9 +19,11 @@ class BatchTest extends TestCase
         }
 
         $MailChimp = new MailChimp($MC_API_KEY);
-        $Batch     = $MailChimp->new_batch();
+        $Batch     = $MailChimp->new_batch('1');
 
-        $this->assertInstanceOf('DrewM\MailChimp\Batch', $Batch);
+        $this->assertInstanceOf('\DrewM\MailChimp\Batch', $Batch);
+
+        $this->assertSame(array(), $Batch->get_operations());
     }
 
 }

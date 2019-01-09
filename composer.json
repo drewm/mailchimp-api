@@ -15,6 +15,11 @@
             "DrewM\\MailChimp\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "DrewM\\MailChimp\\Tests\\": "tests/"
+        }
+    },
     "homepage": "https://github.com/drewm/mailchimp-api",
     "authors": [ 
         {
