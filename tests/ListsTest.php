@@ -1,21 +1,10 @@
 <?php
 
-use \DrewM\MailChimp\MailChimp;
+use DrewM\MailChimp\MailChimp;
 use PHPUnit\Framework\TestCase;
 
 class ListsTest extends TestCase
 {
-
-    public function setUp()
-    {
-        $env_file_path = __DIR__ . '/../';
-
-        if (file_exists($env_file_path . '.env')) {
-            $dotenv = new Dotenv\Dotenv($env_file_path);
-            $dotenv->load();
-        }
-    }
-
     public function testGetLists()
     {
         $MC_API_KEY = getenv('MC_API_KEY');
@@ -29,5 +18,4 @@ class ListsTest extends TestCase
 
         $this->assertArrayHasKey('lists', $lists);
     }
-
 }

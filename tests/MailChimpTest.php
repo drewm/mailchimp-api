@@ -1,35 +1,30 @@
 <?php
 
-use \DrewM\MailChimp\MailChimp;
+namespace DrewM\MailChimp\Tests;
+
+use DrewM\MailChimp\MailChimp;
 use PHPUnit\Framework\TestCase;
 
 class MailChimpTest extends TestCase
 {
-
-    public function setUp()
-    {
-        $env_file_path = __DIR__ . '/../';
-
-        if (file_exists($env_file_path . '.env')) {
-            $dotenv = new Dotenv\Dotenv($env_file_path);
-            $dotenv->load();
-        }
-
-    }
-
+    /**
+     * @throws \Exception
+     */
     public function testInvalidAPIKey()
     {
         $this->expectException('\Exception');
-        $MailChimp = new MailChimp('abc');
+        new MailChimp('abc');
     }
 
     public function testTestEnvironment()
     {
         $MC_API_KEY = getenv('MC_API_KEY');
-        $message    = 'No environment variables! Copy .env.example -> .env and fill out your MailChimp account details.';
-        $this->assertNotEmpty($MC_API_KEY, $message);
+        $this->assertNotEmpty($MC_API_KEY, 'No environment variables! Copy .env.example -> .env and fill out your MailChimp account details.');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testInstantiation()
     {
         $MC_API_KEY = getenv('MC_API_KEY');
@@ -38,10 +33,23 @@ class MailChimpTest extends TestCase
             $this->markTestSkipped('No API key in ENV');
         }
 
-        $MailChimp = new MailChimp($MC_API_KEY);
+        $MailChimp = new MailChimp($MC_API_KEY, 'https://api.mailchimp.com/3.0');
         $this->assertInstanceOf('\DrewM\MailChimp\MailChimp', $MailChimp);
+
+        $this->assertSame('https://api.mailchimp.com/3.0', $MailChimp->getApiEndpoint());
+
+        $this->assertFalse($MailChimp->success());
+
+        $this->assertFalse($MailChimp->getLastError());
+
+        $this->assertSame(array('headers' => null, 'body' => null), $MailChimp->getLastResponse());
+
+        $this->assertSame(array(), $MailChimp->getLastRequest());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testSubscriberHash()
     {
         $MC_API_KEY = getenv('MC_API_KEY');
