@@ -328,7 +328,7 @@ class MailChimp
         $headers = array();
 
         foreach (explode("\r\n", $headersAsString) as $i => $line) {
-            if (substr($line, 0, 7) === 'HTTP/1.') { // HTTP code
+            if (preg_match('/HTTP\/[1-2]', substr($line, 0, 7)) === 1) { // http code
                 continue;
             }
 
