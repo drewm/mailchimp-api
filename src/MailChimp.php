@@ -221,7 +221,7 @@ class MailChimp
             'Accept: application/vnd.api+json',
             'Content-Type: application/vnd.api+json',
             'Authorization: apikey ' . $this->api_key,
-            "Expect:"
+            'Expect:'
         );
 
         if (isset($args["language"])) {
