@@ -81,6 +81,15 @@ class MailChimpTest extends TestCase
 
         $this->assertTrue($MailChimp->success());
     }
+    
+    public function testHasKey()
+    {
+        $MailChimp = new MailChimp('some-key');
+        $this->assertTrue($MailChimp->hasApiKey());
+
+        $MailChimp = new MailChimp('');
+        $this->assertFalse($MailChimp->hasApiKey());
+    }
 
     /* This test requires that your test list have:
      * a) a list
