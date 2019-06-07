@@ -77,6 +77,13 @@ class MailChimp
         return $this->api_endpoint;
     }
 
+    /**
+     * @return bool A api key was set
+     */
+    public function hasApiKey()
+    {
+        return (bool) $this->api_key;
+    }
 
     /**
      * Convert an email address into a 'subscriber hash' for identifying the subscriber in a method URL
