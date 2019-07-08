@@ -52,17 +52,9 @@ class MailChimpTest extends TestCase
      */
     public function testSubscriberHash()
     {
-        $MC_API_KEY = getenv('MC_API_KEY');
-
-        if (!$MC_API_KEY) {
-            $this->markTestSkipped('No API key in ENV');
-        }
-
-        $MailChimp = new MailChimp($MC_API_KEY);
-
         $email    = 'Foo@Example.Com';
         $expected = md5(strtolower($email));
-        $result   = $MailChimp->subscriberHash($email);
+        $result   = MailChimp::subscriberHash($email);
 
         $this->assertEquals($expected, $result);
     }
