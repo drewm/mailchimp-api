@@ -110,6 +110,24 @@ if ($MailChimp->success()) {
 	echo $MailChimp->getLastError();
 }
 ```
+Optionally you can subscribe an email address using additional fields as well, just pass another parameter named `merge_fields` as an array consisting field lists:
+
+```php
+$list_id = 'b1234346';
+
+$result = $MailChimp->post("lists/$list_id/members", [
+				'email_address' => 'davy@example.com',
+				'status'        => 'subscribed',
+				'merge_fields'	=> array('FNAME' =>'john', 'LNAME'=>'Doe')
+			]);
+
+if ($MailChimp->success()) {
+	print_r($result);	
+} else {
+	echo $MailChimp->getLastError();
+}
+```
+
 
 Batch Operations
 ----------------
