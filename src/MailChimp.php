@@ -85,7 +85,7 @@ class MailChimp
      *
      * @return  string          Hashed version of the input
      */
-    public function subscriberHash($email)
+    public static function subscriberHash($email)
     {
         return md5(strtolower($email));
     }
