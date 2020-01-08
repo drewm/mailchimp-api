@@ -1,5 +1,6 @@
 language: php
 sudo: true
+dist: trusty # Required for PHP 5.4/5.5 support
 php:
   - 5.4
   - 5.5
@@ -8,6 +9,7 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction --dev --ignore-platform-reqs
