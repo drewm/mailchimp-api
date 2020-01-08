@@ -1,5 +1,6 @@
 language: php
 sudo: true
+dist: trusty # Required for PHP 5.4/5.5 support
 php:
   - 5.4
   - 5.5
