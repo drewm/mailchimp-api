@@ -337,7 +337,8 @@ class MailChimp
                 continue;
             }
 
-            list($key, $value) = explode(': ', $line);
+            list($key, $value) = explode(':', $line);
+            $value = ltrim($value);
 
             if ($key == 'Link') {
                 $value = array_merge(
