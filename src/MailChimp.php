@@ -15,7 +15,7 @@ class MailChimp
     private $api_key;
     private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
 
-    const TIMEOUT = 10;
+    private $timeout = 10;
 
     /*  SSL Verification
         Read before disabling:
@@ -36,7 +36,7 @@ class MailChimp
      *
      * @throws \Exception
      */
-    public function __construct($api_key, $api_endpoint = null)
+    public function __construct($api_key, $api_endpoint = null, $parameters = array())
     {
         if (!function_exists('curl_init') || !function_exists('curl_setopt')) {
             throw new \Exception("cURL support is required, but can't be found.");
@@ -52,6 +52,10 @@ class MailChimp
             $this->api_endpoint = str_replace('<dc>', $data_center, $this->api_endpoint);
         } else {
             $this->api_endpoint = $api_endpoint;
+        }
+
+        if (isset($parameters['timeout'])) {
+            $this->timeout = $parameters['timeout'];
         }
 
         $this->last_response = array('headers' => null, 'body' => null);
@@ -140,8 +144,12 @@ class MailChimp
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function delete($method, $args = array(), $timeout = self::TIMEOUT)
+    public function delete($method, $args = array(), $timeout = 0)
     {
+        if ($timeout === 0) {
+            $timeout = $this->timeout;
+        }
+
         return $this->makeRequest('delete', $method, $args, $timeout);
     }
 
@@ -154,8 +162,12 @@ class MailChimp
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function get($method, $args = array(), $timeout = self::TIMEOUT)
+    public function get($method, $args = array(), $timeout = 0)
     {
+        if ($timeout === 0) {
+            $timeout = $this->timeout;
+        }
+
         return $this->makeRequest('get', $method, $args, $timeout);
     }
 
@@ -168,8 +180,12 @@ class MailChimp
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function patch($method, $args = array(), $timeout = self::TIMEOUT)
+    public function patch($method, $args = array(), $timeout = 0)
     {
+        if ($timeout === 0) {
+            $timeout = $this->timeout;
+        }
+
         return $this->makeRequest('patch', $method, $args, $timeout);
     }
 
@@ -182,8 +198,12 @@ class MailChimp
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function post($method, $args = array(), $timeout = self::TIMEOUT)
+    public function post($method, $args = array(), $timeout = 0)
     {
+        if ($timeout === 0) {
+            $timeout = $this->timeout;
+        }
+
         return $this->makeRequest('post', $method, $args, $timeout);
     }
 
@@ -196,8 +216,11 @@ class MailChimp
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function put($method, $args = array(), $timeout = self::TIMEOUT)
+    public function put($method, $args = array(), $timeout = 0)
     {
+        if ($timeout === 0) {
+            $timeout = $this->timeout;
+        }
         return $this->makeRequest('put', $method, $args, $timeout);
     }
 
@@ -211,8 +234,12 @@ class MailChimp
      *
      * @return array|false Assoc array of decoded result
      */
-    private function makeRequest($http_verb, $method, $args = array(), $timeout = self::TIMEOUT)
+    private function makeRequest($http_verb, $method, $args = array(), $timeout = 0)
     {
+        if ($timeout === 0) {
+            $timeout = $this->timeout;
+        }
+
         $url = $this->api_endpoint . '/' . $method;
 
         $response = $this->prepareStateForRequest($http_verb, $method, $url, $timeout);
