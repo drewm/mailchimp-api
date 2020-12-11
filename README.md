@@ -222,4 +222,4 @@ This is a fairly simple wrapper, but it has been made much better by contributio
 
 Pull requests for bugs are more than welcome - please explain the bug you're trying to fix in the message.
 
-There are a small number of PHPUnit unit tests. To get up and running, copy `.env.example` to `.env` and add your API key details. Unit testing against an API is obviously a bit tricky, but I'd welcome any contributions to this. It would be great to have more test coverage.
+There are a small number of PHPUnit unit tests. Unit testing against an API is obviously a bit tricky, but I'd welcome any contributions to this. It would be great to have more test coverage.

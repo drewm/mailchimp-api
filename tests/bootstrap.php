@@ -10,7 +10,7 @@ if (!\class_exists('Dotenv\Dotenv')) {
 
 $env_file_path = __DIR__ . '/../';
 
-if (file_exists($env_file_path . '.env')) {
-    $dotenv = new Dotenv\Dotenv($env_file_path);
+if (file_exists($env_file_path . '.env.test')) {
+    $dotenv = new Dotenv\Dotenv($env_file_path, '.env.test');
     $dotenv->load();
 }
