@@ -14,10 +14,6 @@ class BatchTest extends TestCase
     {
         $MC_API_KEY = getenv('MC_API_KEY');
 
-        if (!$MC_API_KEY) {
-            $this->markTestSkipped('No API key in ENV');
-        }
-
         $MailChimp = new MailChimp($MC_API_KEY);
         $Batch     = $MailChimp->new_batch('1');
 
