@@ -134,88 +134,88 @@ class MailChimp
     /**
      * Make an HTTP DELETE request - for deleting data
      *
-     * @param   string $method  URL of the API request method
+     * @param   string $endpoint  Endpoint (URL) of the API request
      * @param   array  $args    Assoc array of arguments (if any)
      * @param   int    $timeout Timeout limit for request in seconds
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function delete($method, $args = array(), $timeout = self::TIMEOUT)
+    public function delete($endpoint, $args = array(), $timeout = self::TIMEOUT)
     {
-        return $this->makeRequest('delete', $method, $args, $timeout);
+        return $this->makeRequest('delete', $endpoint, $args, $timeout);
     }
 
     /**
      * Make an HTTP GET request - for retrieving data
      *
-     * @param   string $method  URL of the API request method
+     * @param   string $endpoint  Endpoint (URL) of the API request
      * @param   array  $args    Assoc array of arguments (usually your data)
      * @param   int    $timeout Timeout limit for request in seconds
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function get($method, $args = array(), $timeout = self::TIMEOUT)
+    public function get($endpoint, $args = array(), $timeout = self::TIMEOUT)
     {
-        return $this->makeRequest('get', $method, $args, $timeout);
+        return $this->makeRequest('get', $endpoint, $args, $timeout);
     }
 
     /**
      * Make an HTTP PATCH request - for performing partial updates
      *
-     * @param   string $method  URL of the API request method
+     * @param   string $endpoint  Endpoint (URL) of the API request
      * @param   array  $args    Assoc array of arguments (usually your data)
      * @param   int    $timeout Timeout limit for request in seconds
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function patch($method, $args = array(), $timeout = self::TIMEOUT)
+    public function patch($endpoint, $args = array(), $timeout = self::TIMEOUT)
     {
-        return $this->makeRequest('patch', $method, $args, $timeout);
+        return $this->makeRequest('patch', $endpoint, $args, $timeout);
     }
 
     /**
      * Make an HTTP POST request - for creating and updating items
      *
-     * @param   string $method  URL of the API request method
+     * @param   string $endpoint  Endpoint (URL) of the API request
      * @param   array  $args    Assoc array of arguments (usually your data)
      * @param   int    $timeout Timeout limit for request in seconds
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function post($method, $args = array(), $timeout = self::TIMEOUT)
+    public function post($endpoint, $args = array(), $timeout = self::TIMEOUT)
     {
-        return $this->makeRequest('post', $method, $args, $timeout);
+        return $this->makeRequest('post', $endpoint, $args, $timeout);
     }
 
     /**
      * Make an HTTP PUT request - for creating new items
      *
-     * @param   string $method  URL of the API request method
+     * @param   string $endpoint  Endpoint (URL) of the API request
      * @param   array  $args    Assoc array of arguments (usually your data)
      * @param   int    $timeout Timeout limit for request in seconds
      *
      * @return  array|false   Assoc array of API response, decoded from JSON
      */
-    public function put($method, $args = array(), $timeout = self::TIMEOUT)
+    public function put($endpoint, $args = array(), $timeout = self::TIMEOUT)
     {
-        return $this->makeRequest('put', $method, $args, $timeout);
+        return $this->makeRequest('put', $endpoint, $args, $timeout);
     }
 
     /**
      * Performs the underlying HTTP request. Not very exciting.
      *
      * @param  string $http_verb The HTTP verb to use: get, post, put, patch, delete
-     * @param  string $method    The API method to be called
+     * @param  string $endpoint    The API endpoint (URL) to be called
      * @param  array  $args      Assoc array of parameters to be passed
      * @param int     $timeout
      *
      * @return array|false Assoc array of decoded result
      */
-    private function makeRequest($http_verb, $method, $args = array(), $timeout = self::TIMEOUT)
+    private function makeRequest($http_verb, $endpoint, $args = array(), $timeout = self::TIMEOUT)
     {
-        $url = $this->api_endpoint . '/' . $method;
+        $url = $this->api_endpoint . '/' . $endpoint;
 
-        $response = $this->prepareStateForRequest($http_verb, $method, $url, $timeout);
+        $response = $this->prepareStateForRequest($http_verb, $endpoint, $url, $timeout);
 
         $httpHeader = array(
             'Accept: application/vnd.api+json',
@@ -283,13 +283,13 @@ class MailChimp
 
     /**
      * @param string  $http_verb
-     * @param string  $method
+     * @param string  $endpoint
      * @param string  $url
      * @param integer $timeout
      *
      * @return array
      */
-    private function prepareStateForRequest($http_verb, $method, $url, $timeout)
+    private function prepareStateForRequest($http_verb, $endpoint, $url, $timeout)
     {
         $this->last_error = '';
 
@@ -303,7 +303,7 @@ class MailChimp
 
         $this->last_request = array(
             'method'  => $http_verb,
-            'path'    => $method,
+            'path'    => $endpoint,
             'url'     => $url,
             'body'    => '',
             'timeout' => $timeout,
