@@ -42,7 +42,7 @@ These are optional. If you're not using batches or webhooks you can just skip th
 Examples
 --------
 
-Start by `use`-ing the class and creating an instance with your API key
+#### Start by `use`-ing the class and creating an instance with your API key
 
 ```php
 use \DrewM\MailChimp\MailChimp;
@@ -50,7 +50,7 @@ use \DrewM\MailChimp\MailChimp;
 $MailChimp = new MailChimp('abc123abc123abc123abc123abc123-us1');
 ```
 
-Then, list all the mailing lists (with a `get` on the `lists` method)
+#### Then, list all the mailing lists (with a `get` on the `lists` method)
 
 ```php
 $result = $MailChimp->get('lists');
@@ -58,20 +58,42 @@ $result = $MailChimp->get('lists');
 print_r($result);
 ```
 
-Subscribe someone to a list (with a `post` to the `lists/{listID}/members` method):
+#### Subscribe someone to a list (with a `post` to the `lists/{listID}/members` method):
+
+Possible values for `status`:
+- `subscribed` - the user will be immediatly subscribed to the list without opt-in email
+- `pending` - the user will be sent an opt-in email before being added to the list
 
 ```php
 $list_id = 'b1234346';
 
 $result = $MailChimp->post("lists/$list_id/members", [
 				'email_address' => 'davy@example.com',
-				'status'        => 'subscribed',
+				'status'        => 'pending',
 			]);
 
 print_r($result);
 ```
 
-Update a list member with more information (using `patch` to update):
+#### Subscribe someone to a list with additional fields (with a `post` to the `lists/{listID}/members` method):
+
+```php
+$list_id = 'b1234346';
+
+$result = $MailChimp->post("lists/$list_id/members", [
+				'email_address' => 'davy@example.com',
+				'status'        => 'pending',
+				'marketing_permissions' => [
+					['marketing_permission_id' => 'xxxxxxxxxx', 'enabled' => true],
+					['marketing_permission_id' => 'yyyyyyyyyy', 'enabled' => true],
+				],
+				'merge_fields' => ['FNAME'=>'Davy', 'LNAME'=>'Jones'],
+			]);
+
+print_r($result);
+```
+
+#### Update a list member with more information (using `patch` to update):
 
 ```php
 $list_id = 'b1234346';
@@ -85,7 +107,7 @@ $result = $MailChimp->patch("lists/$list_id/members/$subscriber_hash", [
 print_r($result);
 ```
 
-Remove a list member using the `delete` method:
+#### Remove a list member using the `delete` method:
 
 ```php
 $list_id = 'b1234346';
@@ -94,7 +116,7 @@ $subscriber_hash = MailChimp::subscriberHash('davy@example.com');
 $MailChimp->delete("lists/$list_id/members/$subscriber_hash");
 ```
 
-Quickly test for a successful action with the `success()` method:
+#### Quickly test for a successful action with the `success()` method:
 
 ```php
 $list_id = 'b1234346';
