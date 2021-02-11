@@ -337,7 +337,13 @@ class MailChimp
                 continue;
             }
 
-            list($key, $value) = explode(':', $line);
+            if (strpos($line, ':') !== false) {
+                list($key, $value) = explode(':', $line);
+            } else {
+                $key = null;
+                $value = $line;
+            }
+
             $value = ltrim($value);
 
             if ($key == 'Link') {
