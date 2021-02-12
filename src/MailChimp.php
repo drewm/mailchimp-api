@@ -8,7 +8,8 @@ namespace DrewM\MailChimp;
  * This wrapper: https://github.com/drewm/mailchimp-api
  *
  * @author  Drew McLellan <drew.mclellan@gmail.com>
- * @version 2.5
+ * @author  Matteo Lazzarin <desonant.promo@gmail.com>
+ * @version 2.6
  */
 class MailChimp
 {
@@ -27,6 +28,7 @@ class MailChimp
     private $last_error         = '';
     private $last_response      = array();
     private $last_request       = array();
+    private $errors_array       = array();
 
     /**
      * Create a new instance
@@ -109,6 +111,17 @@ class MailChimp
     public function getLastError()
     {
         return $this->last_error ?: false;
+    }
+	
+	/**
+	 * Get errors array, in case of multiple errors got back from body response.
+	 * Generically, this errors are thrown from wrong inserted MERGE_FIELDS value, giving a 400 status code
+	 *
+	 * @return array   the errors array
+	 */
+    public function getErrorsArray()
+    {
+    	return $this->errors_array;
     }
 
     /**
@@ -454,6 +467,10 @@ class MailChimp
         if ($status >= 200 && $status <= 299) {
             $this->request_successful = true;
             return true;
+        }
+		
+		if (isset($formattedResponse['errors'])){
+        	$this->errors_array = $formattedResponse['errors'];
         }
 
         if (isset($formattedResponse['detail'])) {

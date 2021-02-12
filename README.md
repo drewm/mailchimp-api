@@ -108,6 +108,13 @@ if ($MailChimp->success()) {
 	print_r($result);	
 } else {
 	echo $MailChimp->getLastError();
+	if(!empty($MailChimp->getErrorsArray())){
+		echo "\nErrors array messages:";
+		foreach($MailChimp->getErrorsArray() as $error){
+			echo "\n".$error['field'].":".$error['message'];
+		}	
+	}
+	
 }
 ```
 
