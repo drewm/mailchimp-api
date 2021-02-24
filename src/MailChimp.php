@@ -2,6 +2,8 @@
 
 namespace DrewM\MailChimp;
 
+use Composer\CaBundle\CaBundle;
+
 /**
  * Super-simple, minimum abstraction MailChimp API v3 wrapper
  * MailChimp API v3: http://developer.mailchimp.com
@@ -242,6 +244,13 @@ class MailChimp
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_ssl);
         curl_setopt($ch, CURLOPT_ENCODING, '');
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
+	    $caPathOrFile = CaBundle::getSystemCaRootBundlePath();
+	    if (is_dir($caPathOrFile)) {
+		    curl_setopt($ch, CURLOPT_CAPATH, $caPathOrFile);
+	    } else {
+		    curl_setopt($ch, CURLOPT_CAINFO, $caPathOrFile);
+	    }
 
         switch ($http_verb) {
             case 'post':
