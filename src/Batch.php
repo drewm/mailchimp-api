@@ -167,4 +167,53 @@ class Batch
 
         $this->operations[] = $operation;
     }
+
+    /**
+     *  Get batch errors
+     *
+     * @return bool|mixed|null
+     * @throws \Exception
+     */
+    public function get_errors()
+    {
+        if (!extension_loaded('zip')) {
+            throw new \Exception('get_errors() method need php-zip extension to be installed');
+        }
+
+        $status = $this->check_status();
+
+        if (!isset($status['response_body_url'])) {
+            return null;
+        }
+
+        $url = $status['response_body_url'];
+        $pathBase = '/tmp/archive_'.sha1(time());
+        $pathArchive = $pathBase.'.tar.gz';
+        $pathZip = $pathBase.'.zip';
+
+        file_put_contents( $pathArchive, file_get_contents($url) );
+
+        $p = new \PharData($pathArchive, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $p->convertToData(\Phar::ZIP);
+
+        $zip = new \ZipArchive;
+        $res = $zip->open($pathZip);
+        if ($res === TRUE) {
+            $zip->extractTo($pathBase);
+            $zip->close();
+        }
+
+        $dir = scandir($pathBase);
+        $filename = $dir[2];
+
+        $data = file_get_contents($pathBase.'/'.$filename);
+
+        $response = json_decode($data, true);
+
+        foreach ($response as $i => $r) {
+            $response[$i]['response'] = json_decode($r['response'], true);
+        }
+
+        return $response;
+    }
 }
